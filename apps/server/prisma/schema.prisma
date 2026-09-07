@@ -186,6 +186,7 @@ model AttentionEvent {
   recordId       String
   type           String
   level          AttentionLevel
+  messageCode    String
   status         AttentionStatus     @default(PENDING)
   createdAt      DateTime            @default(now())
   acknowledgedAt DateTime?

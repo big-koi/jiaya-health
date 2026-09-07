@@ -1,0 +1,5 @@
+ALTER TABLE "AttentionEvent"
+ADD COLUMN "messageCode" TEXT NOT NULL DEFAULT 'BP_ATTENTION';
+
+ALTER TABLE "AttentionEvent"
+ALTER COLUMN "messageCode" DROP DEFAULT;

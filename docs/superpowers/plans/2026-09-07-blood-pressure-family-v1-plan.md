@@ -595,7 +595,7 @@ git commit -m "功能：增加可版本化关注规则引擎"
   - `PATCH /api/v1/blood-pressure/:id`
   - `DELETE /api/v1/blood-pressure/:id`
 
-- [ ] **Step 1: 写 create E2E**
+- [x] **Step 1: 写 create E2E**
 
 输入：
 
@@ -619,18 +619,18 @@ git commit -m "功能：增加可版本化关注规则引擎"
 - `attentionLevel` 来自 RuleEngine。
 - `ruleVersion` 被持久化。
 
-- [ ] **Step 2: 写权限失败测试**
+- [x] **Step 2: 写权限失败测试**
 
 `canRecord=false` 时 POST 返回 `PROFILE_RECORD_FORBIDDEN`。
 
-- [ ] **Step 3: 写软删除测试**
+- [x] **Step 3: 写软删除测试**
 
 DELETE 后：
 - detail 默认查不到；
 - history 默认不出现；
 - DB 行仍存在且 deletedAt 非空。
 
-- [ ] **Step 4: 实现 DTO 校验**
+- [x] **Step 4: 实现 DTO 校验**
 
 至少校验：
 - systolic/diastolic/pulse 为整数且在系统允许录入范围内；
@@ -638,7 +638,7 @@ DELETE 后：
 - source 只允许 self/family/device；
 - V1 API 禁止客户端主动提交 device source，除非内部调用。
 
-- [ ] **Step 5: 实现事务保存**
+- [x] **Step 5: 实现事务保存**
 
 流程：
 
@@ -651,15 +651,15 @@ permission check
 → audit log
 ```
 
-- [ ] **Step 6: 跑 E2E**
+- [x] **Step 6: 跑 E2E**
 
 Expected: PASS。
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add apps/server/src/blood-pressure apps/server/test/blood-pressure.e2e-spec.ts
-git commit -m "feat: add blood pressure recording"
+git commit -m "功能：增加血压记录闭环"
 ```
 
 ---

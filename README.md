@@ -92,6 +92,12 @@ PORT=3000
 # 联调真实微信登录时再填写
 WECHAT_APP_ID=
 WECHAT_APP_SECRET=
+# 关注规则阈值需由产品和专业人员确认后配置
+ATTENTION_RULE_VERSION=
+ATTENTION_SYSTOLIC_MIN=
+RECHECK_SYSTOLIC_MIN=
+ATTENTION_DIASTOLIC_MIN=
+RECHECK_DIASTOLIC_MIN=
 ```
 
 ### 4. 初始化数据库
@@ -176,7 +182,8 @@ git push origin main
 | Task 4 | API 基础、统一错误与 JWT 鉴权 | 已完成 |
 | Task 5 | 家庭、健康档案与档案权限闭环 | 已完成 |
 | Task 6 | 可配置、可版本化的血压关注规则引擎 | 已完成 |
-| Task 7 及后续 | 血压记录、提醒、首页等业务模块 | 待开发 |
+| Task 7 | 血压记录创建、查询、修改与软删除 | 已完成 |
+| Task 8 及后续 | 统计分析、首页、提醒等业务模块 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 
