@@ -541,7 +541,7 @@ export interface AttentionRuleEngine {
 }
 ```
 
-- [ ] **Step 1: 写边界测试**
+- [x] **Step 1: 写边界测试**
 
 正式医学阈值未确认前，使用测试配置注入，不在测试里假定生产阈值：
 
@@ -555,21 +555,21 @@ const engine = createAttentionRuleEngine({
 
 测试 normal / attention / recheck 三档和 ruleVersion。
 
-- [ ] **Step 2: 确认失败**
+- [x] **Step 2: 确认失败**
 
-- [ ] **Step 3: 实现纯函数规则引擎**
+- [x] **Step 3: 实现纯函数规则引擎**
 
 规则模块不能访问数据库、HTTP、Controller 或 UI 文案。
 
-- [ ] **Step 4: 跑 unit tests**
+- [x] **Step 4: 跑 unit tests**
 
 Expected: PASS。
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/server/src/attention
-git commit -m "feat: add versioned attention rule engine"
+git commit -m "功能：增加可版本化关注规则引擎"
 ```
 
 ---
