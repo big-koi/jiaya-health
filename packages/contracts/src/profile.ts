@@ -47,3 +47,7 @@ export type UpdateProfilePermissionRequest = Omit<
   ProfilePermissionDTO,
   'profileId' | 'userId'
 >
+
+export type SetProfilePermissionRequest = UpdateProfilePermissionRequest & {
+  userId: string
+}

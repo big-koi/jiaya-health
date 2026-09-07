@@ -457,7 +457,7 @@ git commit -m "功能：增加 API 与鉴权基础"
   - `GET /api/v1/profiles/:id/permissions`
   - `PATCH /api/v1/profiles/:id/permissions`
 
-- [ ] **Step 1: 写关键 E2E**
+- [x] **Step 1: 写关键 E2E**
 
 必须覆盖：
 
@@ -469,13 +469,13 @@ owner 自动获得爸爸的全部权限
 有 can_view 无 can_record 用户 => 可读不可写
 ```
 
-- [ ] **Step 2: 运行确认失败**
+- [x] **Step 2: 运行确认失败**
 
-- [ ] **Step 3: 实现创建家庭事务**
+- [x] **Step 3: 实现创建家庭事务**
 
 创建 Family 时同一事务创建 owner 的 FamilyMembership。
 
-- [ ] **Step 4: 实现创建 HealthProfile 事务**
+- [x] **Step 4: 实现创建 HealthProfile 事务**
 
 创建档案时，为 creator 自动创建：
 
@@ -489,21 +489,21 @@ owner 自动获得爸爸的全部权限
 }
 ```
 
-- [ ] **Step 5: 实现 ProfilePermissionGuard**
+- [x] **Step 5: 实现 ProfilePermissionGuard**
 
 接口调用前按 `profileId` 查询权限。
 
 不得通过“family owner 就直接放行”绕过显式权限，除非产品规则在 service 中明确赋权。
 
-- [ ] **Step 6: 跑 E2E**
+- [x] **Step 6: 跑 E2E**
 
 Expected: PASS。
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add apps/server/src/families apps/server/src/profiles apps/server/src/permissions apps/server/src/common/guards
-git commit -m "feat: add family profile and permission model"
+git commit -m "功能：增加家庭档案与权限闭环"
 ```
 
 ---

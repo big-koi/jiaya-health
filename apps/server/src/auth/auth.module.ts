@@ -25,5 +25,6 @@ import { WECHAT_SESSION_CLIENT, WechatApiSessionClient } from './wechat-session.
     JwtAuthGuard,
     { provide: WECHAT_SESSION_CLIENT, useClass: WechatApiSessionClient },
   ],
+  exports: [JwtModule, JwtAuthGuard],
 })
 export class AuthModule {}

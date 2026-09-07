@@ -174,7 +174,8 @@ git push origin main
 | Task 2 | 共享 API 契约、常量与工具 | 已完成 |
 | Task 3 | Prisma 数据模型、迁移与数据库测试 | 已完成 |
 | Task 4 | API 基础、统一错误与 JWT 鉴权 | 已完成 |
-| Task 5 及后续 | 家庭、档案、权限、血压记录等业务模块 | 待开发 |
+| Task 5 | 家庭、健康档案与档案权限闭环 | 已完成 |
+| Task 6 及后续 | 关注规则、血压记录、提醒等业务模块 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 
