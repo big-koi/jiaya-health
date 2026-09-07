@@ -1,0 +1,11 @@
+{
+  "appid": "touristappid",
+  "projectname": "jiaya-health",
+  "description": "嘉雅家庭健康小程序",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "dist/",
+  "setting": {
+    "es6": true,
+    "minified": true
+  }
+}

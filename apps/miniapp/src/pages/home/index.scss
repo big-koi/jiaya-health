@@ -1,0 +1,19 @@
+.home-page {
+  display: flex;
+  min-height: 100vh;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 40px;
+}
+
+.home-page__title {
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.home-page__subtitle {
+  margin-top: 16px;
+  color: #58706a;
+  font-size: 28px;
+}

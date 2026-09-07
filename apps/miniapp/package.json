@@ -1,0 +1,38 @@
+{
+  "name": "miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "taro build --type weapp",
+    "dev": "taro build --type weapp --watch",
+    "lint": "eslint src test",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bp/contracts": "workspace:*",
+    "@bp/constants": "workspace:*",
+    "@bp/utils": "workspace:*",
+    "@tarojs/components": "4.2.1",
+    "@tarojs/helper": "4.2.1",
+    "@tarojs/plugin-framework-react": "4.2.1",
+    "@tarojs/plugin-platform-weapp": "4.2.1",
+    "@tarojs/react": "4.2.1",
+    "@tarojs/runtime": "4.2.1",
+    "@tarojs/shared": "4.2.1",
+    "@tarojs/taro": "4.2.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "zustand": "5.0.8"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-react": "^7.27.1",
+    "@tarojs/cli": "4.2.1",
+    "@tarojs/webpack5-runner": "4.2.1",
+    "babel-preset-taro": "4.2.1",
+    "eslint": "^9.35.0",
+    "react-refresh": "^0.14.2",
+    "vite": "^4.5.14"
+  }
+}
