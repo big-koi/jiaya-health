@@ -1,0 +1,212 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum FamilyRole {
+  OWNER
+  MANAGER
+  MEMBER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  DISABLED
+}
+
+enum ProfileStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum BloodPressureSource {
+  SELF
+  FAMILY
+  DEVICE
+}
+
+enum AttentionLevel {
+  NORMAL
+  ATTENTION
+  RECHECK
+}
+
+enum AttentionStatus {
+  PENDING
+  ACKNOWLEDGED
+  RESOLVED
+}
+
+enum ReminderRepeatType {
+  DAILY
+  WEEKDAYS
+}
+
+model User {
+  id                   String                @id @default(cuid())
+  openid               String                @unique
+  unionid              String?               @unique
+  nickname             String?
+  avatar               String?
+  phone                String?
+  status               UserStatus            @default(ACTIVE)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  ownedFamilies        Family[]              @relation("FamilyOwner")
+  memberships          FamilyMembership[]
+  linkedProfiles       HealthProfile[]       @relation("LinkedUser")
+  createdProfiles      HealthProfile[]       @relation("ProfileCreator")
+  profilePermissions   ProfilePermission[]
+  recordedMeasurements BloodPressureRecord[] @relation("RecordCreator")
+  createdReminders     MeasurementReminder[]
+  auditLogs            AuditLog[]
+}
+
+model Family {
+  id          String             @id @default(cuid())
+  name        String
+  ownerUserId String
+  avatar      String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  owner       User               @relation("FamilyOwner", fields: [ownerUserId], references: [id])
+  memberships FamilyMembership[]
+  profiles    HealthProfile[]
+  auditLogs   AuditLog[]
+}
+
+model FamilyMembership {
+  id        String           @id @default(cuid())
+  familyId  String
+  userId    String
+  role      FamilyRole
+  status    MembershipStatus @default(ACTIVE)
+  createdAt DateTime         @default(now())
+  family    Family           @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([familyId, userId])
+}
+
+model HealthProfile {
+  id              String                @id @default(cuid())
+  familyId        String
+  linkedUserId    String?
+  name            String
+  avatar          String?
+  gender          String?
+  birthday        DateTime?
+  relationship    String?
+  elderMode       Boolean               @default(false)
+  status          ProfileStatus         @default(ACTIVE)
+  createdByUserId String
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  family          Family                @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  linkedUser      User?                 @relation("LinkedUser", fields: [linkedUserId], references: [id])
+  createdBy       User                  @relation("ProfileCreator", fields: [createdByUserId], references: [id])
+  permissions     ProfilePermission[]
+  records         BloodPressureRecord[]
+  reminders       MeasurementReminder[]
+  attentionEvents AttentionEvent[]
+  auditLogs       AuditLog[]
+}
+
+model ProfilePermission {
+  id                  String        @id @default(cuid())
+  profileId           String
+  userId              String
+  canView             Boolean       @default(false)
+  canRecord           Boolean       @default(false)
+  canManageReminder   Boolean       @default(false)
+  canManageProfile    Boolean       @default(false)
+  canReceiveAttention Boolean       @default(false)
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+  profile             HealthProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, userId])
+}
+
+model BloodPressureRecord {
+  id                 String              @id @default(cuid())
+  profileId          String
+  systolic           Int
+  diastolic          Int
+  pulse              Int?
+  measuredAt         DateTime
+  source             BloodPressureSource
+  recordedByUserId   String
+  measurementContext Json?
+  note               String?
+  attentionLevel     AttentionLevel
+  ruleVersion        String
+  deviceId           String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  deletedAt          DateTime?
+  profile            HealthProfile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  recordedBy         User                @relation("RecordCreator", fields: [recordedByUserId], references: [id])
+  attentionEvents    AttentionEvent[]
+
+  @@index([profileId, measuredAt])
+  @@index([profileId, deletedAt, measuredAt])
+}
+
+model MeasurementReminder {
+  id                String             @id @default(cuid())
+  profileId         String
+  createdByUserId   String
+  title             String
+  timeOfDay         String
+  repeatType        ReminderRepeatType @default(DAILY)
+  weekdays          Json?
+  enabled           Boolean            @default(true)
+  lateRemindMinutes Int?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  profile           HealthProfile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  createdBy         User               @relation(fields: [createdByUserId], references: [id])
+
+  @@index([profileId, enabled])
+}
+
+model AttentionEvent {
+  id             String              @id @default(cuid())
+  profileId      String
+  recordId       String
+  type           String
+  level          AttentionLevel
+  status         AttentionStatus     @default(PENDING)
+  createdAt      DateTime            @default(now())
+  acknowledgedAt DateTime?
+  resolvedAt     DateTime?
+  profile        HealthProfile       @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  record         BloodPressureRecord @relation(fields: [recordId], references: [id], onDelete: Cascade)
+
+  @@index([profileId, status, createdAt])
+}
+
+model AuditLog {
+  id          String         @id @default(cuid())
+  actorUserId String
+  familyId    String?
+  profileId   String?
+  action      String
+  targetType  String
+  targetId    String
+  metadata    Json?
+  createdAt   DateTime       @default(now())
+  actor       User           @relation(fields: [actorUserId], references: [id])
+  family      Family?        @relation(fields: [familyId], references: [id])
+  profile     HealthProfile? @relation(fields: [profileId], references: [id])
+}
