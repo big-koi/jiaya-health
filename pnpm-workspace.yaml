@@ -3,10 +3,21 @@ packages:
   - packages/*
 
 allowBuilds:
+  '@parcel/watcher': true
   '@prisma/engines': true
+  '@swc/core': true
+  '@tarojs/binding': true
+  '@tarojs/cli': true
+  core-js: true
+  core-js-pure: true
+  esbuild: true
   prisma: true
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
   - '@swc/core'
+  - '@tarojs/binding'
+  - '@tarojs/cli'
+  - core-js
+  - core-js-pure
   - esbuild
