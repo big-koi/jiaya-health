@@ -375,7 +375,7 @@ git commit -m "feat: add v1 database schema"
   - `GET /api/v1/users/me`
   - `CurrentUser = { userId: string }`
 
-- [ ] **Step 1: 写未登录访问失败测试**
+- [x] **Step 1: 写未登录访问失败测试**
 
 ```ts
 it('returns 401 with stable error code', async () => {
@@ -388,9 +388,9 @@ it('returns 401 with stable error code', async () => {
 })
 ```
 
-- [ ] **Step 2: 运行并确认失败**
+- [x] **Step 2: 运行并确认失败**
 
-- [ ] **Step 3: 配置全局前缀与 ValidationPipe**
+- [x] **Step 3: 配置全局前缀与 ValidationPipe**
 
 ```ts
 app.setGlobalPrefix('api/v1')
@@ -398,7 +398,7 @@ app.setGlobalPrefix('api/v1')
 
 全局 ValidationPipe 必须开启 whitelist 和 transform。
 
-- [ ] **Step 4: 实现微信 Session Client 抽象**
+- [x] **Step 4: 实现微信 Session Client 抽象**
 
 ```ts
 export interface WechatSessionClient {
@@ -411,7 +411,7 @@ export interface WechatSessionClient {
 
 Controller 不直接调用微信 HTTP API。
 
-- [ ] **Step 5: 实现 JWT 生成与 Guard**
+- [x] **Step 5: 实现 JWT 生成与 Guard**
 
 Access Token payload 只放必要标识：
 
@@ -421,15 +421,15 @@ type AccessTokenPayload = {
 }
 ```
 
-- [ ] **Step 6: 跑 auth tests**
+- [x] **Step 6: 跑 auth tests**
 
 Expected: PASS。
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add apps/server/src apps/server/test/auth.e2e-spec.ts
-git commit -m "feat: add authentication foundation"
+git commit -m "功能：增加 API 与鉴权基础"
 ```
 
 ---

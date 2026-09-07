@@ -87,7 +87,11 @@ docker stop jiaya-postgres
 
 ```dotenv
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/jiaya_health?schema=public
+JWT_SECRET=请替换为至少32位的随机字符串
 PORT=3000
+# 联调真实微信登录时再填写
+WECHAT_APP_ID=
+WECHAT_APP_SECRET=
 ```
 
 ### 4. 初始化数据库
@@ -169,7 +173,8 @@ git push origin main
 | Task 1 | Monorepo 与基础工程 | 已完成 |
 | Task 2 | 共享 API 契约、常量与工具 | 已完成 |
 | Task 3 | Prisma 数据模型、迁移与数据库测试 | 已完成 |
-| Task 4 及后续 | 认证、家庭、档案、血压记录等业务模块 | 待开发 |
+| Task 4 | API 基础、统一错误与 JWT 鉴权 | 已完成 |
+| Task 5 及后续 | 家庭、档案、权限、血压记录等业务模块 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 
