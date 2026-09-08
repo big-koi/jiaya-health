@@ -15,13 +15,17 @@ const session = vi.hoisted(() => ({
 const taro = vi.hoisted(() => ({
   showToast: vi.fn(async () => ({ errMsg: 'showToast:ok' })),
   switchTab: vi.fn(async () => ({ errMsg: 'switchTab:ok' })),
+  readyCallbacks: [] as Array<() => void>,
 }))
 
 vi.mock('../src/features/auth/auth.service', () => ({ authService: auth }))
 vi.mock('../src/store/session.store', () => ({
   useSessionStore: (selector: (state: typeof session) => unknown) => selector(session),
 }))
-vi.mock('@tarojs/taro', () => ({ default: taro }))
+vi.mock('@tarojs/taro', () => ({
+  default: taro,
+  useReady: (callback: () => void) => taro.readyCallbacks.push(callback),
+}))
 vi.mock('@tarojs/components', async () => {
   const React = await import('react')
   type BasicProps = { children?: ReactNode; className?: string }
@@ -74,6 +78,7 @@ describe('LoginPage', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
+    taro.readyCallbacks.length = 0
     session.currentUser = null
     auth.loginWithWechat.mockResolvedValue({ userId: 'user-1' })
     container = document.createElement('div')
@@ -150,10 +155,13 @@ describe('LoginPage', () => {
     expect(button?.textContent).toBe('微信登录')
   })
 
-  it('已有 session 时进入首页', async () => {
+  it('已有 session 时等待页面就绪后再进入首页', async () => {
     session.currentUser = { userId: 'user-1' }
 
     await renderPage()
+
+    expect(taro.switchTab).not.toHaveBeenCalled()
+    await act(async () => taro.readyCallbacks.forEach((callback) => callback()))
 
     expect(taro.switchTab).toHaveBeenCalledWith({ url: '/pages/home/index' })
   })

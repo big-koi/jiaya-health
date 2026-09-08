@@ -1,6 +1,6 @@
 import { Button, Checkbox, CheckboxGroup, Label, Text, View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
-import { useEffect, useRef, useState } from 'react'
+import Taro, { useReady } from '@tarojs/taro'
+import { useRef, useState } from 'react'
 
 import { authService } from '../../features/auth/auth.service'
 import { useSessionStore } from '../../store/session.store'
@@ -13,9 +13,9 @@ export default function LoginPage(): JSX.Element {
   const loginInFlight = useRef(false)
   const currentUser = useSessionStore((state) => state.currentUser)
 
-  useEffect(() => {
+  useReady(() => {
     if (currentUser) void Taro.switchTab({ url: '/pages/home/index' })
-  }, [currentUser])
+  })
 
   const handleLogin = async (): Promise<void> => {
     if (!agreed) {
@@ -29,6 +29,7 @@ export default function LoginPage(): JSX.Element {
     setErrorMessage(null)
     try {
       await authService.loginWithWechat()
+      await Taro.switchTab({ url: '/pages/home/index' })
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : '登录失败，请稍后重试')
     } finally {
