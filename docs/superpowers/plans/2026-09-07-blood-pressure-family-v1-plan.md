@@ -743,11 +743,11 @@ git commit -m "功能：增加血压统计与首页聚合"
   - `DELETE /api/v1/reminders/:id`
   - `ReminderTaskService.getTodayTasks(profileId, date)`
 
-- [ ] **Step 1: 写权限测试**
+- [x] **Step 1: 写权限测试**
 
 只有 `canManageReminder=true` 才能修改提醒。
 
-- [ ] **Step 2: 写今日任务测试**
+- [x] **Step 2: 写今日任务测试**
 
 给定：
 - 08:00 提醒
@@ -765,9 +765,9 @@ git commit -m "功能：增加血压统计与首页聚合"
 
 V1 可采用“某提醒时间窗口附近存在测量记录则完成”的确定性规则，窗口值作为服务端配置。
 
-- [ ] **Step 3: 实现 CRUD 与 TaskService**
+- [x] **Step 3: 实现 CRUD 与 TaskService**
 
-- [ ] **Step 4: 为平台订阅消息定义 adapter**
+- [x] **Step 4: 为平台订阅消息定义 adapter**
 
 ```ts
 export interface ReminderNotificationAdapter {
@@ -781,15 +781,15 @@ export interface ReminderNotificationAdapter {
 
 V1 若未配置平台消息能力，使用 Noop adapter，不影响核心提醒任务。
 
-- [ ] **Step 5: 跑测试**
+- [x] **Step 5: 跑测试**
 
 Expected: PASS。
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/reminders apps/server/test/reminders.e2e-spec.ts
-git commit -m "feat: add measurement reminders"
+git commit -m "功能：增加测量提醒与今日任务"
 ```
 
 ---

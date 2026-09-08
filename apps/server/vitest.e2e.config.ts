@@ -13,6 +13,8 @@ export default defineConfig({
       RECHECK_SYSTOLIC_MIN: '180',
       ATTENTION_DIASTOLIC_MIN: '90',
       RECHECK_DIASTOLIC_MIN: '120',
+      REMINDER_COMPLETION_WINDOW_MINUTES: '30',
+      APP_TIMEZONE_OFFSET_MINUTES: '480',
     },
   },
 })

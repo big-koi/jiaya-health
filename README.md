@@ -98,6 +98,9 @@ ATTENTION_SYSTOLIC_MIN=
 RECHECK_SYSTOLIC_MIN=
 ATTENTION_DIASTOLIC_MIN=
 RECHECK_DIASTOLIC_MIN=
+# 今日任务完成窗口（分钟）和业务时区偏移（中国标准时间为 480）
+REMINDER_COMPLETION_WINDOW_MINUTES=30
+APP_TIMEZONE_OFFSET_MINUTES=480
 ```
 
 ### 4. 初始化数据库
@@ -119,8 +122,12 @@ pnpm --filter server dev
 
 - `GET /api/v1/blood-pressure/summary?profileId=<档案ID>&range=7d|30d`
 - `GET /api/v1/dashboard?profileId=<档案ID>`
+- `POST /api/v1/reminders`
+- `GET /api/v1/reminders?profileId=<档案ID>`
+- `PATCH /api/v1/reminders/<提醒ID>`
+- `DELETE /api/v1/reminders/<提醒ID>`
 
-这两个接口都需要携带登录令牌，并校验用户是否拥有对应健康档案的查看权限。Task 9 完成前，首页响应中的 `todayTasks` 暂时为空数组。
+所有接口都需要携带登录令牌。统计、首页和提醒列表校验档案查看权限；提醒的创建、修改和删除还要求提醒管理权限。首页响应中的 `todayTasks` 已接入当天生效的测量提醒。
 
 ### 6. 启动微信小程序
 
@@ -189,7 +196,8 @@ git push origin main
 | Task 6 | 可配置、可版本化的血压关注规则引擎 | 已完成 |
 | Task 7 | 血压记录创建、查询、修改与软删除 | 已完成 |
 | Task 8 | 7/30 天血压统计与首页聚合接口 | 已完成 |
-| Task 9 及后续 | 测量提醒、今日任务等业务模块 | 待开发 |
+| Task 9 | 测量提醒、今日任务及首页接入 | 已完成 |
+| Task 10 及后续 | 关注事件、通知等业务模块 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 

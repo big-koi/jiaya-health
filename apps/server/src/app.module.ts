@@ -6,9 +6,10 @@ import { DashboardModule } from './dashboard/dashboard.module'
 import { FamiliesModule } from './families/families.module'
 import { PermissionsModule } from './permissions/permissions.module'
 import { ProfilesModule } from './profiles/profiles.module'
+import { RemindersModule } from './reminders/reminders.module'
 
 @Module({
-  imports: [AuthModule, FamiliesModule, ProfilesModule, PermissionsModule, BloodPressureModule, DashboardModule],
+  imports: [AuthModule, FamiliesModule, ProfilesModule, PermissionsModule, BloodPressureModule, RemindersModule, DashboardModule],
   controllers: [AppController],
 })
 export class AppModule {}
