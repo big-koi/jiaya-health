@@ -15,6 +15,10 @@ const taro = vi.hoisted(() => {
 vi.mock('@tarojs/taro', () => ({ default: taro }))
 
 import { createAuthService } from '../src/features/auth/auth.service'
+import {
+  ACTIVE_PROFILE_STORAGE_KEY,
+  useActiveProfileStore,
+} from '../src/store/active-profile.store'
 import { SESSION_STORAGE_KEY, useSessionStore } from '../src/store/session.store'
 
 const loginResponse: WechatLoginResponse = {
@@ -86,5 +90,33 @@ describe('authService', () => {
     await expect(service.loginWithWechat()).rejects.toThrow('无法获取当前用户')
     expect(useSessionStore.getState()).toMatchObject({ accessToken: null, currentUser: null })
     expect(taro.storage.has(SESSION_STORAGE_KEY)).toBe(false)
+  })
+
+  it('账号 A 成功切换登录账号 B 时不继承账号 A 的档案选择', async () => {
+    useSessionStore.getState().setSession('token-a', { userId: 'user-a' })
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    const service = createAuthService({
+      login: async () => ({ code: 'wechat-code-b' }),
+      apiClient: {
+        post: async () => ({
+          ...loginResponse,
+          accessToken: 'token-b',
+          user: { ...loginResponse.user, id: 'user-b' },
+        }),
+        get: async () => ({ userId: 'user-b' }),
+      },
+    })
+
+    await service.loginWithWechat()
+
+    expect(useSessionStore.getState()).toMatchObject({
+      accessToken: 'token-b',
+      currentUser: { userId: 'user-b' },
+    })
+    expect(useActiveProfileStore.getState()).toMatchObject({
+      activeFamilyId: null,
+      activeProfileId: null,
+    })
+    expect(taro.storage.has(ACTIVE_PROFILE_STORAGE_KEY)).toBe(false)
   })
 })

@@ -1,6 +1,6 @@
 import { Button, Checkbox, CheckboxGroup, Label, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { authService } from '../../features/auth/auth.service'
 import { useSessionStore } from '../../store/session.store'
@@ -10,6 +10,7 @@ export default function LoginPage(): JSX.Element {
   const [agreed, setAgreed] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const loginInFlight = useRef(false)
   const currentUser = useSessionStore((state) => state.currentUser)
 
   useEffect(() => {
@@ -21,7 +22,9 @@ export default function LoginPage(): JSX.Element {
       void Taro.showToast({ title: '请先同意用户协议', icon: 'none' })
       return
     }
+    if (loginInFlight.current) return
 
+    loginInFlight.current = true
     setLoading(true)
     setErrorMessage(null)
     try {
@@ -29,6 +32,7 @@ export default function LoginPage(): JSX.Element {
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : '登录失败，请稍后重试')
     } finally {
+      loginInFlight.current = false
       setLoading(false)
     }
   }

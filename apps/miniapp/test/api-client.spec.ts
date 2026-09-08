@@ -64,6 +64,29 @@ describe('apiClient', () => {
     expect(requestedUrl).toBe('https://api.jiaya.example/api/v1/health')
   })
 
+  it('将未知错误码和数组 details 降级为安全的共享错误结构', async () => {
+    taro.request.mockResolvedValueOnce({
+      statusCode: 400,
+      data: {
+        code: 'UNKNOWN_FROM_UPSTREAM',
+        message: '请求无效',
+        requestId: 'request-invalid',
+        details: ['unexpected'],
+      },
+    })
+
+    const error = await apiClient.get('/invalid').catch((cause: unknown) => cause)
+
+    expect(error).toBeInstanceOf(ApiRequestError)
+    expect(error).toMatchObject({
+      code: 'INTERNAL_ERROR',
+      message: '请求无效',
+      requestId: 'request-invalid',
+      statusCode: 400,
+    })
+    expect((error as ApiRequestError).details).toBeUndefined()
+  })
+
   it.each([
     [401, 'AUTH_REQUIRED'],
     [403, 'TOKEN_EXPIRED'],

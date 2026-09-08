@@ -5,6 +5,21 @@ import { useSessionStore } from '../../store/session.store'
 
 export const DEFAULT_API_BASE_URL = 'http://127.0.0.1:3000/api/v1'
 
+const API_ERROR_CODE_LOOKUP: Record<ApiErrorCode, true> = {
+  AUTH_REQUIRED: true,
+  TOKEN_EXPIRED: true,
+  FAMILY_NOT_FOUND: true,
+  PROFILE_NOT_FOUND: true,
+  PROFILE_VIEW_FORBIDDEN: true,
+  PROFILE_RECORD_FORBIDDEN: true,
+  PROFILE_MANAGE_FORBIDDEN: true,
+  INVALID_BP_READING: true,
+  RECORD_NOT_FOUND: true,
+  REMINDER_NOT_FOUND: true,
+  DUPLICATE_MEMBERSHIP: true,
+  INTERNAL_ERROR: true,
+}
+
 type HttpMethod = 'GET' | 'POST' | 'PATCH' | 'DELETE'
 
 type TransportOptions = {
@@ -54,6 +69,12 @@ function apiUrl(baseUrl: string, path: string): string {
   return `${baseUrl.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
 }
 
+function isApiErrorCode(value: unknown): value is ApiErrorCode {
+  return (
+    typeof value === 'string' && Object.prototype.hasOwnProperty.call(API_ERROR_CODE_LOOKUP, value)
+  )
+}
+
 function parseApiError(data: unknown, statusCode: number, headers?: Record<string, string>): ApiError {
   const body = data && typeof data === 'object' ? (data as Partial<ApiError>) : {}
   const requestIdHeader = Object.entries(headers ?? {}).find(
@@ -61,10 +82,12 @@ function parseApiError(data: unknown, statusCode: number, headers?: Record<strin
   )?.[1]
 
   return {
-    code: typeof body.code === 'string' ? body.code : 'INTERNAL_ERROR',
+    code: isApiErrorCode(body.code) ? body.code : 'INTERNAL_ERROR',
     message: typeof body.message === 'string' ? body.message : '服务暂时不可用',
     requestId: typeof body.requestId === 'string' ? body.requestId : (requestIdHeader ?? ''),
-    ...(body.details && typeof body.details === 'object' ? { details: body.details } : {}),
+    ...(body.details && typeof body.details === 'object' && !Array.isArray(body.details)
+      ? { details: body.details }
+      : {}),
   }
 }
 

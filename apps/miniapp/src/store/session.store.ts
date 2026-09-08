@@ -50,6 +50,7 @@ function persistSession(session: PersistedSession): void {
 export const useSessionStore = create<SessionStore>((set, get) => ({
   ...readSession(),
   setAccessToken: (accessToken) => {
+    useActiveProfileStore.getState().clearSelection()
     const session = { ...get(), accessToken, currentUser: null }
     const persisted = { accessToken: session.accessToken, currentUser: session.currentUser }
     persistSession(persisted)
