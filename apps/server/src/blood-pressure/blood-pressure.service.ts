@@ -97,6 +97,15 @@ export class BloodPressureService {
     return this.toDto(record)
   }
 
+  async getLatest(userId: string, profileId: string): Promise<BloodPressureRecordDTO | null> {
+    await this.assertPermission(userId, profileId, 'canView')
+    const record = await this.prisma.bloodPressureRecord.findFirst({
+      where: { profileId, deletedAt: null, measuredAt: { lte: new Date() } },
+      orderBy: [{ measuredAt: 'desc' }, { id: 'desc' }],
+    })
+    return record ? this.toDto(record) : null
+  }
+
   async update(userId: string, recordId: string, input: UpdateBloodPressureDto): Promise<BloodPressureRecordDTO> {
     const current = await this.findActive(recordId)
     const familyId = await this.assertPermission(userId, current.profileId, 'canRecord')

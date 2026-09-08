@@ -115,7 +115,12 @@ pnpm --filter server exec prisma migrate dev
 pnpm --filter server dev
 ```
 
-默认监听 `http://localhost:3000`，API 前缀将在业务接口阶段统一使用 `/api/v1`。
+默认监听 `http://localhost:3000`，API 前缀统一使用 `/api/v1`。当前可通过以下接口读取统计与首页聚合数据：
+
+- `GET /api/v1/blood-pressure/summary?profileId=<档案ID>&range=7d|30d`
+- `GET /api/v1/dashboard?profileId=<档案ID>`
+
+这两个接口都需要携带登录令牌，并校验用户是否拥有对应健康档案的查看权限。Task 9 完成前，首页响应中的 `todayTasks` 暂时为空数组。
 
 ### 6. 启动微信小程序
 
@@ -183,7 +188,8 @@ git push origin main
 | Task 5 | 家庭、健康档案与档案权限闭环 | 已完成 |
 | Task 6 | 可配置、可版本化的血压关注规则引擎 | 已完成 |
 | Task 7 | 血压记录创建、查询、修改与软删除 | 已完成 |
-| Task 8 及后续 | 统计分析、首页、提醒等业务模块 | 待开发 |
+| Task 8 | 7/30 天血压统计与首页聚合接口 | 已完成 |
+| Task 9 及后续 | 测量提醒、今日任务等业务模块 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 

@@ -10,5 +10,6 @@ import { ProfilesService } from './profiles.service'
   imports: [AuthModule, PrismaModule],
   controllers: [ProfilesController],
   providers: [ProfilesService, ProfilePermissionGuard],
+  exports: [ProfilesService],
 })
 export class ProfilesModule {}

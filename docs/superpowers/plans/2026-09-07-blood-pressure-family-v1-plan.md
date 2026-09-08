@@ -681,7 +681,7 @@ git commit -m "功能：增加血压记录闭环"
   - `GET /api/v1/blood-pressure/summary?profileId=&range=7d|30d`
   - `GET /api/v1/dashboard?profileId=`
 
-- [ ] **Step 1: 写统计测试**
+- [x] **Step 1: 写统计测试**
 
 数据：
 - 3 条有效记录
@@ -692,7 +692,7 @@ git commit -m "功能：增加血压记录闭环"
 - 平均值不包含 deleted 记录
 - attentionCount 正确
 
-- [ ] **Step 2: 写 Dashboard 测试**
+- [x] **Step 2: 写 Dashboard 测试**
 
 必须返回：
 
@@ -706,23 +706,23 @@ git commit -m "功能：增加血压记录闭环"
 }
 ```
 
-- [ ] **Step 3: 实现 AnalysisService**
+- [x] **Step 3: 实现 AnalysisService**
 
 `range=7d|30d` 转换为明确时间范围，不允许前端拼任意 SQL 条件。
 
-- [ ] **Step 4: 实现 DashboardService**
+- [x] **Step 4: 实现 DashboardService**
 
 DashboardService 只聚合 service 输出，不复制各领域查询逻辑。
 
-- [ ] **Step 5: 跑测试**
+- [x] **Step 5: 跑测试**
 
 Expected: PASS。
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add apps/server/src/analysis apps/server/src/dashboard apps/server/test/dashboard.e2e-spec.ts
-git commit -m "feat: add blood pressure analysis dashboard"
+git commit -m "功能：增加血压统计与首页聚合"
 ```
 
 ---

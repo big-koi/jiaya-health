@@ -65,6 +65,17 @@ export class ProfilesService {
     return profiles.map(({ id, name, avatar, elderMode }) => ({ id, name, avatar, elderMode }))
   }
 
+  async getSummary(userId: string, profileId: string): Promise<HealthProfileSummary> {
+    const profile = await this.prisma.healthProfile.findFirst({
+      where: { id: profileId, status: 'ACTIVE', permissions: { some: { userId, canView: true } } },
+      select: { id: true, name: true, avatar: true, elderMode: true },
+    })
+    if (!profile) {
+      throw new ForbiddenException({ code: 'PROFILE_VIEW_FORBIDDEN', message: '没有该健康档案的查看权限' })
+    }
+    return profile
+  }
+
   async get(profileId: string): Promise<HealthProfileDTO> {
     const profile = await this.prisma.healthProfile.findUnique({ where: { id: profileId } })
     if (!profile) throw new NotFoundException({ code: 'PROFILE_NOT_FOUND', message: '健康档案不存在' })

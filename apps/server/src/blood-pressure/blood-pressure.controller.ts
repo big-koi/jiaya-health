@@ -1,4 +1,9 @@
-import type { BloodPressureListResponse, BloodPressureRecordDTO, CreateBloodPressureRecordResponse } from '@bp/contracts'
+import type {
+  BloodPressureListResponse,
+  BloodPressureRecordDTO,
+  BloodPressureSummaryDTO,
+  CreateBloodPressureRecordResponse,
+} from '@bp/contracts'
 import {
   Body,
   BadRequestException,
@@ -18,6 +23,8 @@ import {
 
 import { CurrentUserParam, type CurrentUser } from '../common/auth/current-user.decorator'
 import { JwtAuthGuard } from '../common/auth/jwt-auth.guard'
+import { AnalysisService } from '../analysis/analysis.service'
+import { BloodPressureSummaryQueryDto } from '../analysis/dto/blood-pressure-summary-query.dto'
 import { BloodPressureService } from './blood-pressure.service'
 import { BloodPressureListQueryDto } from './dto/blood-pressure-list-query.dto'
 import { CreateBloodPressureDto } from './dto/create-blood-pressure.dto'
@@ -40,7 +47,10 @@ function bloodPressureValidationPipe(expectedType: Type<unknown>): ValidationPip
 @Controller('blood-pressure')
 @UseGuards(JwtAuthGuard)
 export class BloodPressureController {
-  constructor(@Inject(BloodPressureService) private readonly service: BloodPressureService) {}
+  constructor(
+    @Inject(BloodPressureService) private readonly service: BloodPressureService,
+    @Inject(AnalysisService) private readonly analysisService: AnalysisService,
+  ) {}
 
   @Post()
   create(
@@ -58,6 +68,15 @@ export class BloodPressureController {
     query: BloodPressureListQueryDto,
   ): Promise<BloodPressureListResponse> {
     return this.service.list(user.userId, query)
+  }
+
+  @Get('summary')
+  summary(
+    @CurrentUserParam() user: CurrentUser,
+    @Query(new ValidationPipe({ transform: true, whitelist: true, expectedType: BloodPressureSummaryQueryDto }))
+    query: BloodPressureSummaryQueryDto,
+  ): Promise<BloodPressureSummaryDTO> {
+    return this.analysisService.getBloodPressureSummary(user.userId, query.profileId, query.range)
   }
 
   @Get(':id')
