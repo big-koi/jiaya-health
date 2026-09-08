@@ -17,15 +17,20 @@ const taro = vi.hoisted(() => {
 vi.mock('@tarojs/taro', () => ({ default: taro }))
 
 import { ApiRequestError, apiClient, createApiClient } from '../src/services/api/client'
+import {
+  ACTIVE_PROFILE_STORAGE_KEY,
+  useActiveProfileStore,
+} from '../src/store/active-profile.store'
 import { SESSION_STORAGE_KEY, useSessionStore } from '../src/store/session.store'
 
 const user = { userId: 'user-1' }
 
 describe('apiClient', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    taro.storage.clear()
     useSessionStore.getState().clearSession()
+    useActiveProfileStore.getState().clearSelection()
+    taro.storage.clear()
+    vi.clearAllMocks()
   })
 
   it('为已登录请求注入 Bearer token，并使用本地默认 API 地址', async () => {
@@ -62,8 +67,9 @@ describe('apiClient', () => {
   it.each([
     [401, 'AUTH_REQUIRED'],
     [403, 'TOKEN_EXPIRED'],
-  ] as const)('收到 %s/%s 时清空内存与持久化 session 并返回登录页', async (statusCode, code) => {
+  ] as const)('收到 %s/%s 时清空账号 session 与档案选择并返回登录页', async (statusCode, code) => {
     useSessionStore.getState().setSession('expired-token', user)
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
     const response: ApiError = { code, message: '登录已失效', requestId: 'request-1' }
     taro.request.mockResolvedValueOnce({ statusCode, data: response })
 
@@ -76,7 +82,12 @@ describe('apiClient', () => {
       statusCode,
     } satisfies Partial<ApiRequestError>)
     expect(useSessionStore.getState()).toMatchObject({ accessToken: null, currentUser: null })
+    expect(useActiveProfileStore.getState()).toMatchObject({
+      activeFamilyId: null,
+      activeProfileId: null,
+    })
     expect(taro.storage.has(SESSION_STORAGE_KEY)).toBe(false)
+    expect(taro.storage.has(ACTIVE_PROFILE_STORAGE_KEY)).toBe(false)
     expect(taro.reLaunch).toHaveBeenCalledWith({ url: '/pages/login/index' })
   })
 })

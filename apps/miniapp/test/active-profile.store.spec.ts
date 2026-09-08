@@ -17,12 +17,14 @@ import {
   ACTIVE_PROFILE_STORAGE_KEY,
   useActiveProfileStore,
 } from '../src/store/active-profile.store'
+import { useSessionStore } from '../src/store/session.store'
 
 describe('useActiveProfileStore', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    taro.storage.clear()
+    useSessionStore.getState().clearSession()
     useActiveProfileStore.getState().clearSelection()
+    taro.storage.clear()
+    vi.clearAllMocks()
   })
 
   it('切换档案时只保存家庭与档案标识，不复制档案业务对象', () => {
@@ -48,5 +50,18 @@ describe('useActiveProfileStore', () => {
       activeFamilyId: 'family-2',
       activeProfileId: null,
     })
+  })
+
+  it('清理登录 session 时同步清除当前账号的档案选择', () => {
+    useSessionStore.getState().setSession('token-a', { userId: 'user-a' })
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+
+    useSessionStore.getState().clearSession()
+
+    expect(useActiveProfileStore.getState()).toMatchObject({
+      activeFamilyId: null,
+      activeProfileId: null,
+    })
+    expect(taro.storage.has(ACTIVE_PROFILE_STORAGE_KEY)).toBe(false)
   })
 })

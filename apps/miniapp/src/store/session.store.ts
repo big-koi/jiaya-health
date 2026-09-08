@@ -1,6 +1,8 @@
 import Taro from '@tarojs/taro'
 import { create } from 'zustand'
 
+import { useActiveProfileStore } from './active-profile.store'
+
 export const SESSION_STORAGE_KEY = 'jiaya.session'
 
 export type CurrentUser = {
@@ -60,6 +62,7 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
   },
   clearSession: () => {
     Taro.removeStorageSync(SESSION_STORAGE_KEY)
+    useActiveProfileStore.getState().clearSelection()
     set(EMPTY_SESSION)
   },
 }))

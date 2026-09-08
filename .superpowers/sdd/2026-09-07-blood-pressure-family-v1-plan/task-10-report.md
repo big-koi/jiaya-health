@@ -114,3 +114,67 @@ pnpm --filter miniapp exec vitest run test/auth.service.spec.ts
 - `GET /users/me` 目前只返回 `{ userId }`，因此 session 暂不包含昵称和头像。未来若服务端丰富该响应，应先补共享契约再扩展 session。
 - `127.0.0.1` 适用于本地微信开发者工具；真机联调和发布必须通过 `TARO_APP_API_BASE_URL` 配置可访问的局域网或 HTTPS 地址。
 - 已完成构建与代码级视觉检查，但本任务环境未执行微信开发者工具真机截图验收，安全区和原生复选框在目标机型上的细节仍应做一次人工巡检。
+
+## 修复轮次 1：鉴权失效同步清理档案选择
+
+### 审查问题与根因
+
+审查指出，session 与 active profile 分别持久化在 `jiaya.session` 和 `jiaya.active-profile`。原 `clearSession()` 只删除前者，而 API 的 401/TOKEN_EXPIRED 路径只调用 `clearSession()`。因此账号 A 的家庭与档案选择会保留在 Zustand 内存和 Taro 持久化存储中，并可能被随后登录的账号 B 继承。
+
+根因是账号级状态没有统一生命周期出口，而不是 API 错误分支判断遗漏。采用审查指定的最小方案：让公共 `clearSession()` 同步调用 `useActiveProfileStore.getState().clearSelection()`。这样 API 鉴权失效、登录 flow 失败和今后显式登出只要复用 `clearSession()`，都会清除当前账号的选择状态。
+
+### RED 证据
+
+先修改测试，未改生产代码。命令：
+
+```text
+pnpm --filter miniapp exec vitest run test/api-client.spec.ts test/active-profile.store.spec.ts
+```
+
+结果：退出码 1；2 个测试文件中 3 个测试按预期失败、4 个通过。
+
+- 401/AUTH_REQUIRED 后仍得到 `activeFamilyId: "family-a"`、`activeProfileId: "profile-a"`。
+- 403/TOKEN_EXPIRED 后仍得到同样的旧选择。
+- 直接调用 `clearSession()` 后仍得到同样的旧选择。
+
+所有失败均为行为断言失败，不是导入、语法或测试配置错误。
+
+### 最小修复
+
+- `apps/miniapp/src/store/session.store.ts`
+  - 引入 `useActiveProfileStore`。
+  - `clearSession()` 删除 `jiaya.session` 后同步执行 `clearSelection()`，再重置 session 内存状态。
+- `apps/miniapp/test/api-client.spec.ts`
+  - 为既有 401 与 TOKEN_EXPIRED 参数化测试建立 active profile，并断言内存选择和 `jiaya.active-profile` 都被清除。
+- `apps/miniapp/test/active-profile.store.spec.ts`
+  - 新增直接登出跨 store 回归测试，验证 `clearSession()` 同时清除 active profile。
+  - 测试初始化显式重置两个 store，防止用例间状态泄漏。
+
+### GREEN 证据
+
+再次运行同一定向命令：退出码 0；2 个测试文件、7 个测试全部通过。
+
+### 修复后完整验证
+
+- `pnpm --filter miniapp test`
+  - 退出码 0；4 个测试文件、12 个测试全部通过。
+- `pnpm --filter miniapp typecheck`
+  - 退出码 0，无 TypeScript 错误。
+- `pnpm --filter miniapp lint`
+  - 退出码 0，无 ESLint 错误。
+- `pnpm --filter miniapp build`
+  - 退出码 0；Taro Webpack 微信小程序构建成功，耗时 21.68 秒。
+
+### 修复轮次自审
+
+- [x] 401 不论错误码为何都会清除 session 与 active profile。
+- [x] 非 401 的 TOKEN_EXPIRED 也会清除两类状态。
+- [x] 直接 `clearSession()` 的登出路径具备相同清理语义。
+- [x] 同时覆盖 Zustand 内存状态与两个 Taro 持久化 key。
+- [x] active profile store 仍只保存家庭与档案标识，没有复制业务对象。
+- [x] 删除 `clearSession()` 中新增的 `clearSelection()` 调用会稳定导致 3 个回归测试失败。
+- [x] 未修改或暂存其他既有未提交改动。
+
+### 修复轮次遗留顾虑
+
+- 当前账号级持久化状态只有 session 与 active profile。未来若新增其他账号级 store，应继续纳入统一清理入口，避免再次出现跨账号残留。
