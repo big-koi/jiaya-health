@@ -1,5 +1,55 @@
 page {
-  background: #f5f7f6;
-  color: #18302a;
-  font-family: system-ui, sans-serif;
+  background: var(--jp-color-bg);
+  color: var(--jp-color-text);
+  font-family: 'PingFang SC', 'Helvetica Neue', sans-serif;
+  font-size: var(--jp-font-body);
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+view,
+text,
+input,
+textarea,
+button {
+  box-sizing: border-box;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 24px var(--jp-space-page) calc(var(--jp-tab-height) + 40px);
+  background:
+    radial-gradient(circle at top right, rgba(31, 169, 122, 0.08), transparent 42%),
+    var(--jp-color-bg);
+}
+
+.page--plain {
+  padding-bottom: 48px;
+  background: var(--jp-color-bg);
+}
+
+.page--login {
+  min-height: 100vh;
+  padding: 0;
+  background: linear-gradient(180deg, #dff5ea 0%, #f7fbf9 48%, #ffffff 100%);
+}
+
+.card {
+  background: var(--jp-color-surface);
+  border-radius: var(--jp-radius-lg);
+  box-shadow: var(--jp-shadow-card);
+}
+
+.section-title {
+  display: block;
+  margin-bottom: 20px;
+  color: var(--jp-color-text);
+  font-size: var(--jp-font-subtitle);
+  font-weight: 600;
+}
+
+.safe-hint {
+  color: var(--jp-color-text-muted);
+  font-size: var(--jp-font-caption);
+  line-height: 1.6;
 }

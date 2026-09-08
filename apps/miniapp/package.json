@@ -10,8 +10,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@bp/contracts": "workspace:*",
     "@bp/constants": "workspace:*",
+    "@bp/contracts": "workspace:*",
     "@bp/utils": "workspace:*",
     "@tarojs/components": "4.2.1",
     "@tarojs/helper": "4.2.1",
@@ -33,6 +33,7 @@
     "babel-preset-taro": "4.2.1",
     "eslint": "^9.35.0",
     "react-refresh": "^0.14.2",
+    "sass": "^1.104.0",
     "vite": "^4.5.14"
   }
 }

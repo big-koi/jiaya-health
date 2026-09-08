@@ -1,0 +1,90 @@
+.family-page__header {
+  margin-bottom: 28px;
+}
+
+.family-page__title {
+  display: block;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.family-page__subtitle {
+  display: block;
+  margin-top: 8px;
+  color: var(--jp-color-text-secondary);
+  font-size: 24px;
+}
+
+.family-page__list {
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+
+.family-page__row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px;
+  border-bottom: 1px solid var(--jp-color-border);
+}
+
+.family-page__row:last-child {
+  border-bottom: none;
+}
+
+.family-page__info {
+  flex: 1;
+}
+
+.family-page__name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.family-page__name {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.family-page__role,
+.family-page__elder {
+  padding: 4px 12px;
+  border-radius: var(--jp-radius-pill);
+  font-size: 20px;
+}
+
+.family-page__role {
+  background: var(--jp-color-brand-soft);
+  color: var(--jp-color-brand-deep);
+}
+
+.family-page__elder {
+  background: #fff6e8;
+  color: var(--jp-color-attention);
+}
+
+.family-page__meta {
+  display: block;
+  margin-top: 8px;
+  color: var(--jp-color-text-muted);
+  font-size: 24px;
+}
+
+.family-page__permission {
+  margin-top: 28px;
+  padding: 28px;
+}
+
+.family-page__permission-title {
+  display: block;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.family-page__permission-desc {
+  display: block;
+  margin-top: 8px;
+  color: var(--jp-color-text-secondary);
+  font-size: 24px;
+}

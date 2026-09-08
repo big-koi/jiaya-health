@@ -1,0 +1,117 @@
+.record-page__tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 8px;
+  border-radius: var(--jp-radius-pill);
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.record-page__tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 72px;
+  border-radius: var(--jp-radius-pill);
+  color: var(--jp-color-text-secondary);
+  font-size: 28px;
+}
+
+.record-page__tab.is-active {
+  background: var(--jp-color-brand);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 10px 20px rgba(31, 169, 122, 0.22);
+}
+
+.record-page__inputs,
+.record-page__meta,
+.record-page__device {
+  margin-bottom: 28px;
+  padding: 28px;
+}
+
+.record-page__field {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 8px 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--jp-color-border);
+}
+
+.record-page__field:last-child {
+  border-bottom: none;
+}
+
+.record-page__label {
+  grid-column: 1 / -1;
+  color: var(--jp-color-text-secondary);
+  font-size: 24px;
+}
+
+.record-page__input {
+  height: 72px;
+  color: var(--jp-color-text);
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.record-page__unit {
+  align-self: end;
+  padding-bottom: 16px;
+  color: var(--jp-color-text-muted);
+  font-size: 24px;
+}
+
+.record-page__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--jp-color-border);
+}
+
+.record-page__meta-label {
+  color: var(--jp-color-text-secondary);
+  font-size: 26px;
+}
+
+.record-page__meta-value {
+  color: var(--jp-color-text);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.record-page__note {
+  padding-top: 24px;
+}
+
+.record-page__textarea {
+  width: 100%;
+  min-height: 140px;
+  margin-top: 16px;
+  padding: 20px;
+  border-radius: var(--jp-radius-md);
+  background: var(--jp-color-brand-wash);
+  color: var(--jp-color-text);
+  font-size: 26px;
+}
+
+.record-page__tip {
+  display: block;
+  margin-top: 24px;
+  text-align: center;
+}
+
+.record-page__device-title {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+.record-page__device-action {
+  margin-top: 32px;
+}

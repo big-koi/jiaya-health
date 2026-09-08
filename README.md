@@ -2,7 +2,7 @@
 
 家压家庭健康是一套面向家庭场景的微信小程序与服务端工程。V1 聚焦血压记录、家庭代录、档案共享、关注提示和测量提醒，帮助家庭成员共同维护健康数据。
 
-> 当前仓库处于基础建设阶段，已完成 Monorepo、共享契约和数据库模型，尚未达到生产可用状态。系统只提供 `normal`、`attention`、`recheck` 产品提示，不代替医生诊断。
+> 当前仓库处于基础建设阶段，已完成后端核心 API 与小程序 UI 演示骨架，尚未达到生产可用状态。小程序页面目前使用本地演示数据，尚未完成登录鉴权与接口联调。系统只提供 `normal`、`attention`、`recheck` 产品提示，不代替医生诊断。
 
 ## V1 功能边界
 
@@ -137,6 +137,23 @@ pnpm --filter miniapp dev
 
 然后在微信开发者工具中导入 `apps/miniapp` 目录。项目配置会将 `dist` 作为小程序代码目录；正式联调前需要把 `apps/miniapp/project.config.json` 中的测试 AppID 替换成自己的小程序 AppID。
 
+当前小程序 UI 已按设计图落地演示页：
+
+- 登录页、首页、记录血压、历史趋势、关注提示、家人、提醒设置、我的
+- 底部 Tab：首页 / 家人 / 记录 / 我的（V1 不含「发现」）
+- 设备同步入口保留为占位，提示 V1 暂不接蓝牙
+- 数据解读页只展示产品关注提示，不展示诊断式医学分级表
+
+页面数据来自 `apps/miniapp/src/mocks/demo-data.ts`，后续 Task 10 起再接入真实 API。
+
+### 预览注意
+
+1. 先在仓库根目录执行 `pnpm --filter miniapp dev`（或 `build`），确保生成 `apps/miniapp/dist`。
+2. 微信开发者工具导入目录必须是 `apps/miniapp`，不要导入 `src` 或仓库根目录。
+3. 项目已配置 `miniprogramRoot: dist/`，模拟器运行的是编译产物。
+4. 若仍白屏：打开调试器「Console」查看红色报错，并点击「清缓存 → 全部清除」后重新编译。
+5. 编辑器里关于 `noImplicitOverride` 的提示来自开发者工具内置旧版 TypeScript，不影响运行。
+
 ## 质量检查
 
 在仓库根目录执行：
@@ -197,7 +214,8 @@ git push origin main
 | Task 7 | 血压记录创建、查询、修改与软删除 | 已完成 |
 | Task 8 | 7/30 天血压统计与首页聚合接口 | 已完成 |
 | Task 9 | 测量提醒、今日任务及首页接入 | 已完成 |
-| Task 10 及后续 | 关注事件、通知等业务模块 | 待开发 |
+| UI 演示 | 小程序主流程页面与设计 Token（演示数据） | 已完成 |
+| Task 10 及后续 | 登录鉴权、接口联调、关注事件、通知等 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
 

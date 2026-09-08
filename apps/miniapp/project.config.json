@@ -1,11 +1,37 @@
 {
   "appid": "touristappid",
   "projectname": "jiaya-health",
-  "description": "嘉雅家庭健康小程序",
+  "description": "家压家庭健康小程序",
   "compileType": "miniprogram",
   "miniprogramRoot": "dist/",
   "setting": {
     "es6": true,
-    "minified": true
-  }
+    "minified": false,
+    "postcss": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "enhance": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }

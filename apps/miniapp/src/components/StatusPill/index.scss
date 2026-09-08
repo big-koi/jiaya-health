@@ -1,0 +1,37 @@
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  border-radius: var(--jp-radius-pill);
+}
+
+.status-pill__text {
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.status-pill--normal {
+  background: var(--jp-color-normal-bg);
+}
+
+.status-pill--normal .status-pill__text {
+  color: var(--jp-color-normal);
+}
+
+.status-pill--attention {
+  background: var(--jp-color-attention-bg);
+}
+
+.status-pill--attention .status-pill__text {
+  color: var(--jp-color-attention);
+}
+
+.status-pill--recheck {
+  background: var(--jp-color-recheck-bg);
+}
+
+.status-pill--recheck .status-pill__text {
+  color: var(--jp-color-recheck);
+}

@@ -1,0 +1,31 @@
+.primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0 40px;
+  height: 96px;
+  border: none;
+  border-radius: var(--jp-radius-pill);
+  background: linear-gradient(135deg, #24b984 0%, #1fa97a 55%, #148a62 100%);
+  box-shadow: 0 12px 28px rgba(31, 169, 122, 0.28);
+  line-height: 1;
+}
+
+.primary-button::after {
+  border: none;
+}
+
+.primary-button.is-block {
+  width: 100%;
+}
+
+.primary-button.is-disabled {
+  opacity: 0.5;
+}
+
+.primary-button__text {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 600;
+}

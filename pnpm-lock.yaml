@@ -99,6 +99,9 @@ importers:
       react-refresh:
         specifier: ^0.14.2
         version: 0.14.2
+      sass:
+        specifier: ^1.104.0
+        version: 1.104.0
       vite:
         specifier: ^4.5.14
         version: 4.5.14(@types/node@24.13.3)(less@4.9.1(supports-color@8.0.0))(lightningcss@1.33.0)(sass@1.104.0)(stylus@0.64.0(supports-color@8.0.0))(terser@5.51.2)
@@ -10088,7 +10091,7 @@ snapshots:
 
   '@types/serve-index@1.9.4':
     dependencies:
-      '@types/express': 4.17.25
+      '@types/express': 5.0.6
 
   '@types/serve-static@1.15.10':
     dependencies:

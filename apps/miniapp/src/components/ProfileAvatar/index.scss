@@ -1,0 +1,62 @@
+.profile-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-avatar__circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(24, 48, 42, 0.12);
+}
+
+.profile-avatar__initial {
+  font-weight: 700;
+  color: #fff;
+}
+
+.profile-avatar__name {
+  color: var(--jp-color-text-secondary);
+  font-size: 22px;
+}
+
+.profile-avatar--sm .profile-avatar__circle {
+  width: 64px;
+  height: 64px;
+}
+
+.profile-avatar--sm .profile-avatar__initial {
+  font-size: 24px;
+}
+
+.profile-avatar--md .profile-avatar__circle {
+  width: 88px;
+  height: 88px;
+}
+
+.profile-avatar--md .profile-avatar__initial {
+  font-size: 30px;
+}
+
+.profile-avatar--lg .profile-avatar__circle {
+  width: 120px;
+  height: 120px;
+}
+
+.profile-avatar--lg .profile-avatar__initial {
+  font-size: 40px;
+}
+
+.profile-avatar.is-active .profile-avatar__circle {
+  outline: 4px solid rgba(31, 169, 122, 0.35);
+  outline-offset: 4px;
+}
+
+.profile-avatar.is-active .profile-avatar__name {
+  color: var(--jp-color-brand);
+  font-weight: 600;
+}

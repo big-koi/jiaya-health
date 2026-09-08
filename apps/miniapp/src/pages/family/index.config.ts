@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '家压',
+  navigationBarTitleText: '家人',
 })

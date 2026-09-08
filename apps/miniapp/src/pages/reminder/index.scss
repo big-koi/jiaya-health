@@ -1,0 +1,78 @@
+.reminder-page__master,
+.reminder-page__slots,
+.reminder-page__members,
+.reminder-page__message {
+  margin-bottom: 28px;
+}
+
+.reminder-page__master {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px;
+}
+
+.reminder-page__title {
+  display: block;
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.reminder-page__desc {
+  display: block;
+  margin-top: 8px;
+  color: var(--jp-color-text-secondary);
+  font-size: 24px;
+}
+
+.reminder-page__slot,
+.reminder-page__member {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px;
+  border-bottom: 1px solid var(--jp-color-border);
+}
+
+.reminder-page__slot:last-child,
+.reminder-page__member:last-child {
+  border-bottom: none;
+}
+
+.reminder-page__slot-label {
+  display: block;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.reminder-page__slot-time {
+  display: block;
+  margin-top: 8px;
+  color: var(--jp-color-brand);
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.reminder-page__member.is-checked {
+  background: var(--jp-color-brand-wash);
+}
+
+.reminder-page__member-name {
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.reminder-page__member-check {
+  color: var(--jp-color-brand);
+  font-size: 24px;
+}
+
+.reminder-page__message {
+  padding: 8px 28px;
+}
+
+.reminder-page__input {
+  height: 88px;
+  font-size: 28px;
+}

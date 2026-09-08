@@ -1,6 +1,8 @@
-import type { PropsWithChildren } from 'react'
+import './styles/tokens.scss'
 import './app.scss'
 
-export default function App({ children }: PropsWithChildren): JSX.Element {
+import type { PropsWithChildren, ReactElement } from 'react'
+
+export default function App({ children }: PropsWithChildren): ReactElement {
   return <>{children}</>
 }

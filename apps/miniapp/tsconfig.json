@@ -1,8 +1,16 @@
 {
-  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "module": "ESNext",
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ES2020",
     "types": ["@tarojs/taro", "node"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts"]
