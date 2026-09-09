@@ -5,9 +5,8 @@ import type { BloodPressureRecordDTO, HealthProfileSummary } from '@bp/contracts
 import { ProfileAvatar } from '../../components/ProfileAvatar'
 import { StatusPill } from '../../components/StatusPill'
 import { formatMeasuredAt } from '../../mocks/demo-data'
-import { dashboardApi } from '../../services/api/dashboard.api'
-import { profilesApi } from '../../services/api/profiles.api'
 import { recordsApi } from '../../services/api/records.api'
+import { profileQueryService } from '../../services/query/profile-query.service'
 import { useActiveProfileStore } from '../../store/active-profile.store'
 import './index.scss'
 
@@ -32,7 +31,7 @@ export default function HomePage(): JSX.Element {
     void (async () => {
       setLoading(true)
       try {
-        const profileList = await profilesApi.list()
+        const profileList = await profileQueryService.list()
         setProfiles(profileList)
       } catch (cause) {
         setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
@@ -52,7 +51,7 @@ export default function HomePage(): JSX.Element {
     void (async () => {
       try {
         const [dashboard, records] = await Promise.all([
-          dashboardApi.get(activeProfileId),
+          profileQueryService.dashboard(activeProfileId),
           recordsApi.list({ profileId: activeProfileId, limit: 5 }),
         ])
         if (cancelled) return
