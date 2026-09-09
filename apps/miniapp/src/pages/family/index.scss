@@ -14,7 +14,7 @@
 }
 
 .family-page__title {
-  font-size: 40px;
+  font-size: 38px;
   font-weight: 700;
 }
 
@@ -35,10 +35,13 @@
   min-width: 260px;
   padding: 24px;
   border: 2px solid transparent;
-  border-radius: var(--jp-radius-md);
+  border-radius: var(--jp-radius-card);
   background: var(--jp-color-surface);
-  box-shadow: var(--jp-shadow-card);
+  box-shadow: none;
+  transition: transform var(--jp-duration-fast) ease;
 }
+
+.family-page__family:active { transform: scale(0.985); }
 
 .family-page__family.is-active {
   border-color: rgba(31, 169, 122, 0.45);
@@ -93,7 +96,10 @@
   min-height: 150px;
   padding: 26px 28px;
   border-bottom: 1px solid var(--jp-color-border);
+  transition: background var(--jp-duration-fast) ease;
 }
+
+.family-member-card:active { background: var(--jp-color-brand-wash); }
 
 .family-member-card:last-child {
   border-bottom: none;
