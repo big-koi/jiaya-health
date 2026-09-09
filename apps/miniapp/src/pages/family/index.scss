@@ -14,8 +14,9 @@
 }
 
 .family-page__title {
-  font-size: 38px;
-  font-weight: 700;
+  font-size: 42px;
+  font-weight: 750;
+  letter-spacing: -1px;
 }
 
 .family-page__subtitle {
@@ -33,7 +34,7 @@
 
 .family-page__family {
   min-width: 260px;
-  padding: 24px;
+  padding: 26px;
   border: 2px solid transparent;
   border-radius: var(--jp-radius-card);
   background: var(--jp-color-surface);
@@ -44,8 +45,9 @@
 .family-page__family:active { transform: scale(0.985); }
 
 .family-page__family.is-active {
-  border-color: rgba(31, 169, 122, 0.45);
-  background: var(--jp-color-brand-wash);
+  border-color: rgba(9, 168, 107, 0.38);
+  background: linear-gradient(145deg, #e7f8f0, #f9fdfb);
+  box-shadow: 0 8px 24px rgba(9, 168, 107, 0.08);
 }
 
 .family-page__family-name {
@@ -93,7 +95,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  min-height: 150px;
+  min-height: 156px;
   padding: 26px 28px;
   border-bottom: 1px solid var(--jp-color-border);
   transition: background var(--jp-duration-fast) ease;
@@ -115,6 +117,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.family-member-card__relation {
+  color: var(--jp-color-text-muted);
+  font-size: 21px;
 }
 
 .family-member-card__name {
@@ -153,6 +160,13 @@
   align-self: flex-start;
   color: var(--jp-color-brand-deep);
   font-size: 22px;
+}
+
+.family-member-card__chevron {
+  align-self: center;
+  margin-left: -6px;
+  color: #a7b7b1;
+  font-size: 36px;
 }
 
 .family-page__empty {

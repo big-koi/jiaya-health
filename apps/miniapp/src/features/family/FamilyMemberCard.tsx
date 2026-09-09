@@ -37,6 +37,9 @@ export function FamilyMemberCard({
       <View className="family-member-card__body">
         <View className="family-member-card__heading">
           <Text className="family-member-card__name">{profile.name}</Text>
+          <Text className="family-member-card__relation">
+            {profile.elderMode ? '长辈' : '家庭成员'}
+          </Text>
           {profile.elderMode ? (
             <Text className="family-member-card__elder">长辈模式</Text>
           ) : null}
@@ -70,6 +73,7 @@ export function FamilyMemberCard({
           编辑成员
         </Text>
       ) : null}
+      <Text className="family-member-card__chevron">›</Text>
     </View>
   )
 }

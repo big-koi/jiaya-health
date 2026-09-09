@@ -133,36 +133,27 @@ export default function RecordCreatePage(): JSX.Element {
           <View className="card record-page__inputs">
             <View className="record-page__field">
               <Text className="record-page__label">收缩压（高压）</Text>
-              <Input
-                className="record-page__input"
-                type="number"
-                value={systolic}
-                placeholder="例如 120"
-                onInput={(event) => setSystolic(event.detail.value)}
-              />
-              <Text className="record-page__unit">mmHg</Text>
+              <View className="record-page__value-row">
+                <Input className="record-page__input" type="number" value={systolic}
+                  placeholder="120" onInput={(event) => setSystolic(event.detail.value)} />
+                <Text className="record-page__unit">mmHg</Text>
+              </View>
             </View>
             <View className="record-page__field">
               <Text className="record-page__label">舒张压（低压）</Text>
-              <Input
-                className="record-page__input"
-                type="number"
-                value={diastolic}
-                placeholder="例如 80"
-                onInput={(event) => setDiastolic(event.detail.value)}
-              />
-              <Text className="record-page__unit">mmHg</Text>
+              <View className="record-page__value-row">
+                <Input className="record-page__input" type="number" value={diastolic}
+                  placeholder="80" onInput={(event) => setDiastolic(event.detail.value)} />
+                <Text className="record-page__unit">mmHg</Text>
+              </View>
             </View>
             <View className="record-page__field">
               <Text className="record-page__label">脉搏（可选）</Text>
-              <Input
-                className="record-page__input"
-                type="number"
-                value={pulse}
-                placeholder="例如 72"
-                onInput={(event) => setPulse(event.detail.value)}
-              />
-              <Text className="record-page__unit">bpm</Text>
+              <View className="record-page__value-row">
+                <Input className="record-page__input" type="number" value={pulse}
+                  placeholder="72" onInput={(event) => setPulse(event.detail.value)} />
+                <Text className="record-page__unit">次/分</Text>
+              </View>
             </View>
           </View>
 
@@ -201,12 +192,12 @@ export default function RecordCreatePage(): JSX.Element {
             </View>
           </View>
 
-          <PrimaryButton disabled={!canSubmit} loading={saving} onClick={() => void handleSave()}>
-            保存记录
-          </PrimaryButton>
-          <Text className="safe-hint record-page__tip">
-            建议静坐休息 5 分钟后再测量，结果更稳定。提示仅供日常参考，不能替代医生诊断。
-          </Text>
+          <View className="record-page__actions">
+            <PrimaryButton disabled={!canSubmit} loading={saving} onClick={() => void handleSave()}>
+              保存记录
+            </PrimaryButton>
+            <Text className="safe-hint record-page__tip">静坐休息 5 分钟后测量，结果会更稳定</Text>
+          </View>
         </>
       )}
     </View>

@@ -17,7 +17,7 @@ button {
 
 .page {
   min-height: 100vh;
-  padding: 24px var(--jp-space-page) calc(var(--jp-tab-height) + 40px);
+  padding: 30px var(--jp-space-page) calc(var(--jp-tab-height) + 48px);
   background: var(--jp-color-bg);
 }
 
@@ -34,7 +34,7 @@ button {
 
 .card {
   background: var(--jp-color-surface);
-  border: 1px solid rgba(223, 235, 229, 0.72);
+  border: 1px solid rgba(219, 234, 227, 0.82);
   border-radius: var(--jp-radius-card);
   box-shadow: var(--jp-shadow-card);
 }

@@ -2,7 +2,16 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 26px;
+}
+
+.home-page__eyebrow {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--jp-color-brand-deep);
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: 3px;
 }
 
 .home-page__empty {
@@ -58,8 +67,9 @@
 .home-page__brand {
   display: block;
   color: var(--jp-color-text);
-  font-size: 44px;
-  font-weight: 700;
+  font-size: 46px;
+  font-weight: 750;
+  letter-spacing: -2px;
 }
 
 .home-page__greeting {
@@ -77,7 +87,8 @@
   height: 64px;
   border-radius: 50%;
   background: var(--jp-color-surface);
-  box-shadow: var(--jp-shadow-card);
+  border: 1px solid var(--jp-color-border);
+  box-shadow: 0 6px 18px rgba(18, 52, 47, 0.06);
 }
 
 .home-page__settings-icon {
@@ -87,7 +98,7 @@
 
 .home-page__members {
   display: flex;
-  gap: 28px;
+  gap: 30px;
   overflow-x: auto;
   margin-bottom: 28px;
   padding-bottom: 8px;
@@ -123,11 +134,21 @@
 }
 
 .home-page__latest {
+  position: relative;
+  overflow: hidden;
   padding: 36px 32px;
   margin-bottom: 28px;
-  background:
-    linear-gradient(135deg, rgba(31, 169, 122, 0.12), rgba(255, 255, 255, 0.95) 48%),
-    #fff;
+  background: linear-gradient(138deg, #eaf9f2 0%, #fff 56%, #f8fcfa 100%);
+}
+
+.home-page__latest-orbit {
+  position: absolute;
+  right: -42px;
+  bottom: -58px;
+  width: 190px;
+  height: 190px;
+  border: 34px solid rgba(9, 168, 107, 0.055);
+  border-radius: 50%;
 }
 
 .home-page__latest-top {
@@ -150,7 +171,7 @@
 
 .home-page__bp {
   color: var(--jp-color-text);
-  font-size: 72px;
+  font-size: 76px;
   font-weight: 700;
   letter-spacing: 1px;
   line-height: 1;
@@ -189,15 +210,19 @@
   flex-direction: column;
   align-items: center;
   gap: 12px;
+  padding: 8px 0;
+  transition: transform var(--jp-duration-fast) ease;
 }
+
+.home-page__action:active { transform: translateY(2px) scale(0.97); }
 
 .home-page__action-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 88px;
-  height: 88px;
-  border-radius: 28px;
+  width: 82px;
+  height: 82px;
+  border-radius: 25px;
 }
 
 .home-page__action-icon--record {
@@ -217,9 +242,9 @@
 }
 
 .home-page__action-mark {
-  color: var(--jp-color-text);
-  font-size: 30px;
-  font-weight: 700;
+  color: var(--jp-color-brand-deep);
+  font-size: 36px;
+  font-weight: 600;
 }
 
 .home-page__action-label {
@@ -229,6 +254,7 @@
 
 .home-page__list {
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(18, 52, 47, 0.045);
 }
 
 .home-page__row {

@@ -49,11 +49,12 @@ export default function LoginPage(): JSX.Element {
         </View>
 
         <View className="login-page__intro">
-          <Text className="login-page__title">关心家人的健康</Text>
-          <Text className="login-page__title">从今天开始</Text>
-          <Text className="login-page__desc">家庭血压记录与关怀</Text>
+          <Text className="login-page__title">用记录，守护家人的健康</Text>
+          <Text className="login-page__desc">让关心，变成一种日常</Text>
         </View>
-        <Image className="login-page__hero" src="/assets/brand/family-hero.jpg" mode="widthFix" />
+        <View className="login-page__hero-frame">
+          <Image className="login-page__hero" src="/assets/brand/family-hero.jpg" mode="widthFix" />
+        </View>
       </View>
 
       <View className="login-page__footer">

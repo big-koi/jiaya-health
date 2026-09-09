@@ -5,11 +5,11 @@ import { useSessionStore } from '../../store/session.store'
 import './index.scss'
 
 const menus = [
-  { key: 'family', label: '我的家庭', path: '/pages/family/index', tab: true },
-  { key: 'reminder', label: '提醒设置', path: '/pages/reminder/index', tab: false },
-  { key: 'history', label: '健康知识', path: '/pages/record-result/index', tab: false },
-  { key: 'feedback', label: '意见反馈', path: '', tab: false },
-  { key: 'about', label: '关于家压', path: '', tab: false },
+  { key: 'family', icon: '⌂', label: '我的家庭', path: '/pages/family/index', tab: true },
+  { key: 'reminder', icon: '◷', label: '提醒设置', path: '/pages/reminder/index', tab: false },
+  { key: 'history', icon: '♡', label: '健康知识', path: '/pages/record-result/index', tab: false },
+  { key: 'feedback', icon: '□', label: '意见反馈', path: '', tab: false },
+  { key: 'about', icon: 'i', label: '关于家压', path: '', tab: false },
 ] as const
 
 export default function MinePage(): JSX.Element {
@@ -52,6 +52,7 @@ export default function MinePage(): JSX.Element {
           <Text className="mine-page__name">{displayName}</Text>
           <Text className="mine-page__bio">用记录，守护家人的健康</Text>
         </View>
+        <Text className="mine-page__profile-arrow">›</Text>
       </View>
 
       <View className="card mine-page__menu">
@@ -61,6 +62,9 @@ export default function MinePage(): JSX.Element {
             className="mine-page__item"
             onClick={() => openMenu(item.path, item.tab, item.label)}
           >
+            <View className={`mine-page__item-icon mine-page__item-icon--${item.key}`}>
+              <Text>{item.icon}</Text>
+            </View>
             <Text className="mine-page__item-label">{item.label}</Text>
             <Text className="mine-page__item-arrow">›</Text>
           </View>
@@ -68,8 +72,9 @@ export default function MinePage(): JSX.Element {
       </View>
 
       <View className="mine-page__footer">
+        <View className="mine-page__brand-mark"><Text>家</Text></View>
         <Text className="mine-page__logo">家压</Text>
-        <Text className="mine-page__version">v0.2.0 · 接口联调版</Text>
+        <Text className="mine-page__version">家庭血压记录与关怀</Text>
         <Text className="mine-page__logout" onClick={handleLogout}>
           退出登录
         </Text>

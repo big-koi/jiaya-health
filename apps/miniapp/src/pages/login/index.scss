@@ -5,7 +5,7 @@
   box-sizing: border-box;
   min-height: 100vh;
   overflow: hidden;
-  padding: 56px 40px calc(36px + env(safe-area-inset-bottom));
+  padding: 34px 38px calc(28px + env(safe-area-inset-bottom));
   background: linear-gradient(180deg, #effcf5 0%, #f9fcfa 58%, #ffffff 100%);
 }
 
@@ -17,7 +17,8 @@
 .login-page__brand-row {
   display: flex;
   align-items: center;
-  gap: 16px;
+  justify-content: center;
+  gap: 14px;
 }
 
 .login-page__brand-mark {
@@ -47,13 +48,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 64px;
+  margin-top: 30px;
   text-align: center;
 }
 
 .login-page__title {
   color: #18302a;
-  font-size: 43px;
+  font-size: 39px;
   font-weight: 650;
   line-height: 1.45;
   letter-spacing: -1px;
@@ -63,20 +64,33 @@
   margin-top: 18px;
   max-width: 590px;
   color: #5b716a;
-  font-size: 25px;
+  font-size: 24px;
   line-height: 1.65;
+}
+
+.login-page__hero-frame {
+  overflow: hidden;
+  margin: 26px -10px 0;
+  border-radius: 42px 42px 22px 22px;
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 20px 48px rgba(35, 91, 69, 0.1);
 }
 
 .login-page__hero {
   display: block;
-  width: calc(100% + 80px);
-  margin: 20px -40px -12px;
+  width: 100%;
 }
 
 .login-page__footer {
   display: flex;
   flex-direction: column;
-  margin-top: 12px;
+  margin: -18px 8px 0;
+  padding: 24px 22px 4px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 32px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 16px 40px rgba(18, 52, 47, 0.1);
+  backdrop-filter: blur(20px);
 }
 
 .login-page__button {
