@@ -1,28 +1,5 @@
 .record-page__tabs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
   margin-bottom: 28px;
-  padding: 8px;
-  border-radius: var(--jp-radius-pill);
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.record-page__tab {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 72px;
-  border-radius: var(--jp-radius-pill);
-  color: var(--jp-color-text-secondary);
-  font-size: 28px;
-}
-
-.record-page__tab.is-active {
-  background: var(--jp-color-brand);
-  color: #fff;
-  font-weight: 600;
-  box-shadow: 0 10px 20px rgba(31, 169, 122, 0.22);
 }
 
 .record-page__inputs,
@@ -52,7 +29,10 @@
 }
 
 .record-page__input {
-  height: 72px;
+  height: 88px;
+  padding: 0 20px;
+  border-radius: var(--jp-radius-control);
+  background: #f4f6f5;
   color: var(--jp-color-text);
   font-size: 48px;
   font-weight: 700;
@@ -60,7 +40,7 @@
 
 .record-page__unit {
   align-self: end;
-  padding-bottom: 16px;
+  padding: 0 12px 26px 0;
   color: var(--jp-color-text-muted);
   font-size: 24px;
 }

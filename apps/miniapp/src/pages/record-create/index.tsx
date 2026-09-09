@@ -3,8 +3,9 @@ import Taro, { useDidShow } from '@tarojs/taro'
 import { useEffect, useMemo, useState } from 'react'
 import type { HealthProfileSummary } from '@bp/contracts'
 import { PrimaryButton } from '../../components/PrimaryButton'
-import { profilesApi } from '../../services/api/profiles.api'
+import { SegmentedControl } from '../../components/SegmentedControl'
 import { recordsApi } from '../../services/api/records.api'
+import { profileQueryService } from '../../services/query/profile-query.service'
 import { useActiveProfileStore } from '../../store/active-profile.store'
 import './index.scss'
 
@@ -30,7 +31,7 @@ export default function RecordCreatePage(): JSX.Element {
   useDidShow(() => {
     void (async () => {
       try {
-        const profileList = await profilesApi.list()
+        const profileList = await profileQueryService.list()
         setProfiles(profileList)
         const storedId = useActiveProfileStore.getState().activeProfileId
         const index = storedId ? profileList.findIndex((item) => item.id === storedId) : -1
@@ -82,6 +83,7 @@ export default function RecordCreatePage(): JSX.Element {
         source: 'family',
         note: note || null,
       })
+      profileQueryService.invalidateDashboard(profile.id)
       const level = result.attention.level
       const messageCode = result.attention.messageCode
       void Taro.navigateTo({
@@ -100,18 +102,12 @@ export default function RecordCreatePage(): JSX.Element {
   return (
     <View className="page record-page">
       <View className="record-page__tabs">
-        <View
-          className={`record-page__tab ${mode === 'manual' ? 'is-active' : ''}`}
-          onClick={() => setMode('manual')}
-        >
-          <Text>手动输入</Text>
-        </View>
-        <View
-          className={`record-page__tab ${mode === 'device' ? 'is-active' : ''}`}
-          onClick={() => setMode('device')}
-        >
-          <Text>设备同步</Text>
-        </View>
+        <SegmentedControl
+          ariaLabel="记录方式"
+          value={mode}
+          options={[{ label: '手动输入', value: 'manual' }, { label: '设备同步', value: 'device' }]}
+          onChange={setMode}
+        />
       </View>
 
       {profilesLoaded && !selectedProfile ? (
