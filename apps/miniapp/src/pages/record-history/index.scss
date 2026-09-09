@@ -1,22 +1,14 @@
 .history-page__ranges {
   display: flex;
-  gap: 16px;
+  gap: 4px;
   margin-bottom: 24px;
+  padding: 6px;
+  border-radius: var(--jp-radius-control);
+  background: #edf3f0;
 }
 
-.history-page__range {
-  padding: 14px 28px;
-  border-radius: var(--jp-radius-pill);
-  background: #fff;
-  color: var(--jp-color-text-secondary);
-  font-size: 24px;
-}
-
-.history-page__range.is-active {
-  background: var(--jp-color-brand);
-  color: #fff;
-  font-weight: 600;
-}
+.history-page__range { flex: 1; min-height: 68px; border-radius: 10px; color: var(--jp-color-text-secondary); font-size: 24px; line-height: 68px; text-align: center; }
+.history-page__range.is-active { background: #fff; color: var(--jp-color-brand-deep); font-weight: 600; box-shadow: 0 3px 12px rgba(18, 52, 47, 0.08); }
 
 .history-page__chart,
 .history-page__stats,
@@ -38,9 +30,9 @@
 .history-page__plot {
   position: relative;
   height: 260px;
-  border-radius: var(--jp-radius-md);
+  border-radius: var(--jp-radius-control);
   background:
-    linear-gradient(180deg, rgba(31, 169, 122, 0.08), transparent 70%),
+    linear-gradient(180deg, rgba(9, 168, 107, 0.08), transparent 70%),
     #f7fbf9;
   overflow: hidden;
 }

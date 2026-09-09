@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { useEffect, useMemo, useState } from 'react'
 import type { BloodPressureRecordDTO, BloodPressureSummaryDTO } from '@bp/contracts'
 import { PrimaryButton } from '../../components/PrimaryButton'
+import { StateView } from '../../components/StateView'
 import { StatusPill } from '../../components/StatusPill'
 import { formatMeasuredAt } from '../../mocks/demo-data'
 import { recordsApi, type BloodPressureSummaryRange } from '../../services/api/records.api'
@@ -20,6 +21,7 @@ export default function RecordHistoryPage(): JSX.Element {
   const [summary, setSummary] = useState<BloodPressureSummaryDTO | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [refreshKey, setRefreshKey] = useState(0)
   const activeProfileId = useActiveProfileStore((state) => state.activeProfileId)
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function RecordHistoryPage(): JSX.Element {
       }
     })()
     return () => { cancelled = true }
-  }, [activeProfileId, range])
+  }, [activeProfileId, range, refreshKey])
 
   const switchRange = (targetRange: BloodPressureSummaryRange): void => {
     setRange(targetRange)
@@ -102,6 +104,7 @@ export default function RecordHistoryPage(): JSX.Element {
         {ranges.map((item) => (
           <View
             key={item.key}
+            data-range={item.key}
             className={`history-page__range ${range === item.key ? 'is-active' : ''}`}
             onClick={() => switchRange(item.key)}
           >
@@ -116,11 +119,11 @@ export default function RecordHistoryPage(): JSX.Element {
           <PrimaryButton onClick={() => void Taro.switchTab({ url: '/pages/family/index' })}>去选择成员</PrimaryButton>
         </View>
       ) : loading ? (
-        <Text className="safe-hint">加载中…</Text>
+        <StateView state="loading" />
       ) : error ? (
-        <Text className="safe-hint">{error}</Text>
+        <StateView state="error" title="历史数据加载失败" description={error} onRetry={() => setRefreshKey((value) => value + 1)} />
       ) : records.length === 0 ? (
-        <Text className="safe-hint">暂无血压记录，去记录第一条吧</Text>
+        <StateView state="empty" title="还没有血压记录" description="记录第一条血压后，这里会展示变化趋势" />
       ) : (
         <>
           <View className="card history-page__chart">
