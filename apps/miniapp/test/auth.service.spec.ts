@@ -1,4 +1,4 @@
-import type { WechatLoginResponse } from '@bp/contracts'
+import type { UserDTO, WechatLoginResponse } from '@bp/contracts'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 const taro = vi.hoisted(() => {
@@ -21,17 +21,19 @@ import {
 } from '../src/store/active-profile.store'
 import { SESSION_STORAGE_KEY, useSessionStore } from '../src/store/session.store'
 
+const userA: UserDTO = {
+  id: 'user-1',
+  nickname: '小明',
+  avatar: null,
+  phone: null,
+  status: 'active',
+  createdAt: '2026-09-08T00:00:00.000Z',
+  updatedAt: '2026-09-08T00:00:00.000Z',
+}
+
 const loginResponse: WechatLoginResponse = {
   accessToken: 'wechat-access-token',
-  user: {
-    id: 'user-1',
-    nickname: '',
-    avatar: null,
-    phone: null,
-    status: 'active',
-    createdAt: '2026-09-08T00:00:00.000Z',
-    updatedAt: '2026-09-08T00:00:00.000Z',
-  },
+  user: userA,
 }
 
 describe('authService', () => {
@@ -55,12 +57,16 @@ describe('authService', () => {
         },
         get: async (path) => {
           calls.push(`get:${path}:token=${useSessionStore.getState().accessToken}`)
-          return { userId: 'user-1' }
+          return userA
         },
       },
     })
 
-    await expect(service.loginWithWechat()).resolves.toEqual({ userId: 'user-1' })
+    await expect(service.loginWithWechat()).resolves.toEqual({
+      userId: 'user-1',
+      nickname: '小明',
+      avatar: null,
+    })
     expect(calls).toEqual([
       'taro.login',
       'post:/auth/wechat:{"code":"wechat-code"}',
@@ -68,11 +74,11 @@ describe('authService', () => {
     ])
     expect(useSessionStore.getState()).toMatchObject({
       accessToken: 'wechat-access-token',
-      currentUser: { userId: 'user-1' },
+      currentUser: { userId: 'user-1', nickname: '小明', avatar: null },
     })
     expect(taro.storage.get(SESSION_STORAGE_KEY)).toEqual({
       accessToken: 'wechat-access-token',
-      currentUser: { userId: 'user-1' },
+      currentUser: { userId: 'user-1', nickname: '小明', avatar: null },
     })
   })
 
@@ -93,17 +99,22 @@ describe('authService', () => {
   })
 
   it('账号 A 成功切换登录账号 B 时不继承账号 A 的档案选择', async () => {
-    useSessionStore.getState().setSession('token-a', { userId: 'user-a' })
+    useSessionStore.getState().setSession('token-a', {
+      userId: 'user-a',
+      nickname: '账号A',
+      avatar: null,
+    })
     useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    const userB: UserDTO = { ...userA, id: 'user-b', nickname: '账号B' }
     const service = createAuthService({
       login: async () => ({ code: 'wechat-code-b' }),
       apiClient: {
         post: async () => ({
           ...loginResponse,
           accessToken: 'token-b',
-          user: { ...loginResponse.user, id: 'user-b' },
+          user: userB,
         }),
-        get: async () => ({ userId: 'user-b' }),
+        get: async () => userB,
       },
     })
 
@@ -111,7 +122,7 @@ describe('authService', () => {
 
     expect(useSessionStore.getState()).toMatchObject({
       accessToken: 'token-b',
-      currentUser: { userId: 'user-b' },
+      currentUser: { userId: 'user-b', nickname: '账号B', avatar: null },
     })
     expect(useActiveProfileStore.getState()).toMatchObject({
       activeFamilyId: null,

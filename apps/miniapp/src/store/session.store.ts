@@ -7,6 +7,8 @@ export const SESSION_STORAGE_KEY = 'jiaya.session'
 
 export type CurrentUser = {
   userId: string
+  nickname: string
+  avatar: string | null
 }
 
 type PersistedSession = {
@@ -35,7 +37,17 @@ function readSession(): PersistedSession {
       accessToken: typeof stored.accessToken === 'string' ? stored.accessToken : null,
       currentUser:
         stored.currentUser && typeof stored.currentUser.userId === 'string'
-          ? { userId: stored.currentUser.userId }
+          ? {
+              userId: stored.currentUser.userId,
+              nickname:
+                typeof stored.currentUser.nickname === 'string'
+                  ? stored.currentUser.nickname
+                  : '',
+              avatar:
+                typeof stored.currentUser.avatar === 'string'
+                  ? stored.currentUser.avatar
+                  : null,
+            }
           : null,
     }
   } catch {
@@ -57,7 +69,14 @@ export const useSessionStore = create<SessionStore>((set, get) => ({
     set(persisted)
   },
   setSession: (accessToken, currentUser) => {
-    const session = { accessToken, currentUser: { userId: currentUser.userId } }
+    const session = {
+      accessToken,
+      currentUser: {
+        userId: currentUser.userId,
+        nickname: currentUser.nickname,
+        avatar: currentUser.avatar,
+      },
+    }
     persistSession(session)
     set(session)
   },

@@ -57,7 +57,7 @@ describe('鉴权 API', () => {
       .set('authorization', `Bearer ${loginResponse.body.accessToken}`)
       .expect(200)
 
-    expect(currentUserResponse.body).toEqual({ userId: loginResponse.body.user.id })
+    expect(currentUserResponse.body).toEqual(loginResponse.body.user)
   })
 
   it('拒绝无效的 JWT', async () => {

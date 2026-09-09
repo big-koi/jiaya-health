@@ -1,0 +1,63 @@
+.family-form-page__intro {
+  margin: 16px 0 32px;
+}
+
+.family-form-page__title,
+.family-form-page__desc,
+.family-form-page__label,
+.family-form-page__error {
+  display: block;
+}
+
+.family-form-page__title {
+  font-size: 38px;
+  font-weight: 700;
+}
+
+.family-form-page__desc {
+  margin-top: 10px;
+  color: var(--jp-color-text-secondary);
+  font-size: 25px;
+}
+
+.family-form-page__form {
+  padding: 30px;
+}
+
+.family-form-page__label {
+  margin-bottom: 12px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.family-form-page__input,
+.family-form-page__picker {
+  min-height: 88px;
+  margin-bottom: 26px;
+  padding: 22px 24px;
+  border: 1px solid var(--jp-color-border);
+  border-radius: var(--jp-radius-md);
+  background: #fbfdfc;
+  font-size: 27px;
+}
+
+.family-form-page__error {
+  margin: -8px 0 20px;
+  color: var(--jp-color-recheck);
+  font-size: 24px;
+}
+
+.family-form-page__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding: 22px 0;
+}
+
+.family-form-page__toggle-desc {
+  display: block;
+  margin-top: 5px;
+  color: var(--jp-color-text-muted);
+  font-size: 22px;
+}

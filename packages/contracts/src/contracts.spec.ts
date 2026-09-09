@@ -13,7 +13,7 @@ import {
 describe('shared API contracts', () => {
   it('models the dashboard payload consumed by both applications', () => {
     const dashboard = {
-      profile: { id: 'p1', name: '爸爸', avatar: null, elderMode: true },
+      profile: { id: 'p1', familyId: 'f1', name: '爸爸', avatar: null, elderMode: true },
       latestRecord: null,
       todayTasks: [{ time: '08:00', status: 'completed' }],
       sevenDaySummary: {
@@ -26,6 +26,7 @@ describe('shared API contracts', () => {
     } satisfies DashboardResponse
 
     expect(dashboard.profile.elderMode).toBe(true)
+    expect(dashboard.profile.familyId).toBe('f1')
     expect(dashboard.todayTasks[0]?.status).toBe('completed')
   })
 

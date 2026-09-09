@@ -1,0 +1,64 @@
+.profile-detail-page__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0 34px;
+}
+
+.profile-detail-page__name {
+  margin-top: 18px;
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.profile-detail-page__elder {
+  margin-top: 10px;
+  padding: 5px 14px;
+  border-radius: var(--jp-radius-pill);
+  background: var(--jp-color-attention-bg);
+  color: #9a6617;
+  font-size: 22px;
+}
+
+.profile-detail-page__card,
+.profile-detail-page__state {
+  margin-bottom: 28px;
+  padding: 30px;
+}
+
+.profile-detail-page__row,
+.profile-detail-page__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 80px;
+  border-bottom: 1px solid var(--jp-color-border);
+  color: var(--jp-color-text-secondary);
+  font-size: 26px;
+}
+
+.profile-detail-page__label,
+.profile-detail-page__error {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.profile-detail-page__input {
+  min-height: 84px;
+  margin-bottom: 22px;
+  padding: 20px 22px;
+  border: 1px solid var(--jp-color-border);
+  border-radius: var(--jp-radius-md);
+}
+
+.profile-detail-page__edit {
+  display: block;
+  padding-top: 26px;
+  color: var(--jp-color-brand-deep);
+  text-align: right;
+}
+
+.profile-detail-page__error {
+  margin-top: 18px;
+  color: var(--jp-color-recheck);
+}

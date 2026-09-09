@@ -1,4 +1,4 @@
-import type { WechatLoginRequest, WechatLoginResponse } from '@bp/contracts'
+import type { UserDTO, WechatLoginRequest, WechatLoginResponse } from '@bp/contracts'
 import Taro from '@tarojs/taro'
 
 import { apiClient } from '../../services/api/client'
@@ -6,7 +6,11 @@ import { type CurrentUser, useSessionStore } from '../../store/session.store'
 
 type AuthApiClient = {
   post: (path: string, data: WechatLoginRequest) => Promise<WechatLoginResponse>
-  get: (path: string) => Promise<CurrentUser>
+  get: (path: string) => Promise<UserDTO>
+}
+
+function toCurrentUser(user: UserDTO): CurrentUser {
+  return { userId: user.id, nickname: user.nickname, avatar: user.avatar }
 }
 
 type AuthServiceDependencies = {
@@ -29,8 +33,8 @@ export function createAuthService(dependencies: AuthServiceDependencies): AuthSe
 
       try {
         const currentUser = await dependencies.apiClient.get('/users/me')
-        useSessionStore.getState().setSession(accessToken, currentUser)
-        return currentUser
+        useSessionStore.getState().setSession(accessToken, toCurrentUser(currentUser))
+        return toCurrentUser(currentUser)
       } catch (error) {
         useSessionStore.getState().clearSession()
         throw error
@@ -43,6 +47,6 @@ export const authService = createAuthService({
   login: async () => Taro.login(),
   apiClient: {
     post: (path, data) => apiClient.post<WechatLoginResponse>(path, data),
-    get: (path) => apiClient.get<CurrentUser>(path),
+    get: (path) => apiClient.get<UserDTO>(path),
   },
 })

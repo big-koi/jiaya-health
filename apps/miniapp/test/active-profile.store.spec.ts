@@ -53,7 +53,11 @@ describe('useActiveProfileStore', () => {
   })
 
   it('清理登录 session 时同步清除当前账号的档案选择', () => {
-    useSessionStore.getState().setSession('token-a', { userId: 'user-a' })
+    useSessionStore.getState().setSession('token-a', {
+      userId: 'user-a',
+      nickname: '',
+      avatar: null,
+    })
     useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
 
     useSessionStore.getState().clearSession()

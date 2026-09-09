@@ -113,7 +113,11 @@ describe('家庭、健康档案与权限 API', () => {
       .set('authorization', `Bearer ${owner.accessToken}`)
       .expect(200)
     expect(profilesResponse.body).toContainEqual(
-      expect.objectContaining({ id: profileResponse.body.id, name: '爸爸' }),
+      expect.objectContaining({
+        id: profileResponse.body.id,
+        familyId: familyResponse.body.id,
+        name: '爸爸',
+      }),
     )
 
     const updatedResponse = await request(app.getHttpServer())

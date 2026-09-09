@@ -26,4 +26,12 @@ describe('miniapp foundation', () => {
 
     expect(tsconfig.compilerOptions?.target).toBe('ES2020')
   })
+
+  it('注册家庭创建、成员添加和成员详情页面', () => {
+    const source = readFileSync(new URL('../src/app.config.ts', import.meta.url), 'utf8')
+
+    expect(source).toContain("'pages/family-create/index'")
+    expect(source).toContain("'pages/family-profile-add/index'")
+    expect(source).toContain("'pages/family-profile/index'")
+  })
 })

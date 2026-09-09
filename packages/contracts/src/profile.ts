@@ -2,6 +2,7 @@ export type Gender = 'male' | 'female' | 'other'
 
 export type HealthProfileSummary = {
   id: string
+  familyId: string
   name: string
   avatar: string | null
   elderMode: boolean

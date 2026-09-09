@@ -1,5 +1,5 @@
 import type { UserDTO, WechatLoginResponse } from '@bp/contracts'
-import { Inject, Injectable } from '@nestjs/common'
+import { Inject, Injectable, NotFoundException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import type { User } from '@prisma/client'
 
@@ -29,6 +29,12 @@ export class AuthService {
     const payload: AccessTokenPayload = { sub: user.id }
 
     return { accessToken: await this.jwtService.signAsync(payload), user: this.toUserDto(user) }
+  }
+
+  async getCurrentUser(userId: string): Promise<UserDTO> {
+    const user = await this.prisma.user.findUnique({ where: { id: userId } })
+    if (!user) throw new NotFoundException({ code: 'USER_NOT_FOUND', message: '用户不存在' })
+    return this.toUserDto(user)
   }
 
   private toUserDto(user: User): UserDTO {

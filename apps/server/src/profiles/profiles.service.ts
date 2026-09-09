@@ -62,13 +62,19 @@ export class ProfilesService {
       where: { permissions: { some: { userId, canView: true } }, status: 'ACTIVE' },
       orderBy: { createdAt: 'asc' },
     })
-    return profiles.map(({ id, name, avatar, elderMode }) => ({ id, name, avatar, elderMode }))
+    return profiles.map(({ id, familyId, name, avatar, elderMode }) => ({
+      id,
+      familyId,
+      name,
+      avatar,
+      elderMode,
+    }))
   }
 
   async getSummary(userId: string, profileId: string): Promise<HealthProfileSummary> {
     const profile = await this.prisma.healthProfile.findFirst({
       where: { id: profileId, status: 'ACTIVE', permissions: { some: { userId, canView: true } } },
-      select: { id: true, name: true, avatar: true, elderMode: true },
+      select: { id: true, familyId: true, name: true, avatar: true, elderMode: true },
     })
     if (!profile) {
       throw new ForbiddenException({ code: 'PROFILE_VIEW_FORBIDDEN', message: '没有该健康档案的查看权限' })
