@@ -62,6 +62,7 @@ vi.mock('@tarojs/components', async () => {
         },
         children,
       ),
+    Image: (props: { src: string; className?: string }) => React.createElement('img', props),
   }
 })
 

@@ -1,4 +1,4 @@
-import { Button, Checkbox, CheckboxGroup, Label, Text, View } from '@tarojs/components'
+import { Button, Checkbox, CheckboxGroup, Image, Label, Text, View } from '@tarojs/components'
 import Taro, { useReady } from '@tarojs/taro'
 import { useRef, useState } from 'react'
 
@@ -49,14 +49,11 @@ export default function LoginPage(): JSX.Element {
         </View>
 
         <View className="login-page__intro">
-          <Text className="login-page__title">记录血压，陪伴家人</Text>
-          <Text className="login-page__desc">把每次测量和提醒放在一起，让家人及时了解健康变化。</Text>
+          <Text className="login-page__title">关心家人的健康</Text>
+          <Text className="login-page__title">从今天开始</Text>
+          <Text className="login-page__desc">家庭血压记录与关怀</Text>
         </View>
-
-        <View className="login-page__notice">
-          <Text className="login-page__notice-title">安心记录</Text>
-          <Text className="login-page__notice-text">健康数据仅用于家庭记录与共享，不替代专业医疗建议。</Text>
-        </View>
+        <Image className="login-page__hero" src="/assets/brand/family-hero.jpg" mode="widthFix" />
       </View>
 
       <View className="login-page__footer">
