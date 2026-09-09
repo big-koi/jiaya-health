@@ -76,3 +76,60 @@
   height: 88px;
   font-size: 28px;
 }
+
+.reminder-page__profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+  padding: 28px;
+}
+
+.reminder-page__profile-label {
+  color: var(--jp-color-text-secondary);
+  font-size: 26px;
+}
+
+.reminder-page__profile-value {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--jp-color-text);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.reminder-page__profile-arrow {
+  color: var(--jp-color-text-muted);
+  font-size: 32px;
+}
+
+.reminder-page__empty {
+  display: block;
+  padding: 48px 28px;
+  color: var(--jp-color-text-secondary);
+  font-size: 26px;
+  text-align: center;
+}
+
+.reminder-page__slot-info {
+  flex: 1;
+}
+
+.reminder-page__slot-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.reminder-page__remove {
+  color: var(--jp-color-attention);
+  font-size: 24px;
+}
+
+.reminder-page__quick {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+}

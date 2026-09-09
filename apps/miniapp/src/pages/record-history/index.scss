@@ -147,3 +147,11 @@
   font-size: 28px;
   font-weight: 600;
 }
+
+.history-page__empty {
+  display: block;
+  padding: 64px 28px;
+  color: var(--jp-color-text-secondary);
+  font-size: 26px;
+  text-align: center;
+}

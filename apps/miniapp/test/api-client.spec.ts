@@ -23,7 +23,7 @@ import {
 } from '../src/store/active-profile.store'
 import { SESSION_STORAGE_KEY, useSessionStore } from '../src/store/session.store'
 
-const user = { userId: 'user-1' }
+const user = { userId: 'user-1', nickname: '小明', avatar: null as string | null }
 
 describe('apiClient', () => {
   beforeEach(() => {

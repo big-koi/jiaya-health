@@ -12,9 +12,9 @@ type InputMode = 'manual' | 'device'
 
 export default function RecordCreatePage(): JSX.Element {
   const [mode, setMode] = useState<InputMode>('manual')
-  const [systolic, setSystolic] = useState('128')
-  const [diastolic, setDiastolic] = useState('82')
-  const [pulse, setPulse] = useState('72')
+  const [systolic, setSystolic] = useState('')
+  const [diastolic, setDiastolic] = useState('')
+  const [pulse, setPulse] = useState('')
   const [profiles, setProfiles] = useState<HealthProfileSummary[]>([])
   const [profileIndex, setProfileIndex] = useState(0)
   const [note, setNote] = useState('')

@@ -3,7 +3,6 @@ import Taro, { useRouter } from '@tarojs/taro'
 import type { AttentionLevel } from '@bp/contracts'
 import { PrimaryButton } from '../../components/PrimaryButton'
 import { StatusPill } from '../../components/StatusPill'
-import { attentionMessageMap } from '../../mocks/demo-data'
 import './index.scss'
 
 const tips = [
@@ -20,11 +19,20 @@ function resolveLevel(value?: string): AttentionLevel {
   return 'normal'
 }
 
+const messageByCode: Record<string, string> = {
+  BP_NORMAL: '本次读数暂无特殊提示，可继续按日常节奏记录。',
+  BP_ATTENTION: '本次读数建议多留意后续变化，必要时咨询医生。',
+  BP_RECHECK: '建议休息后复测一次，并关注后续记录变化。',
+}
+
 export default function RecordResultPage(): JSX.Element {
   const router = useRouter()
   const level = resolveLevel(router.params.level)
+  const messageCode = router.params.messageCode ?? ''
   const systolic = router.params.systolic ?? '128'
   const diastolic = router.params.diastolic ?? '82'
+
+  const message = messageByCode[messageCode] ?? '记录已保存，可继续按日常节奏记录。'
 
   return (
     <View className="page page--plain result-page">
@@ -36,7 +44,7 @@ export default function RecordResultPage(): JSX.Element {
         <Text className="result-page__bp">
           {systolic}/{diastolic} mmHg
         </Text>
-        <Text className="result-page__message">{attentionMessageMap[level]}</Text>
+        <Text className="result-page__message">{message}</Text>
         <Text className="safe-hint">
           以上为产品关注提示，不构成医疗诊断或用药建议。
         </Text>

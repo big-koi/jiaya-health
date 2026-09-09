@@ -15,7 +15,7 @@
 
 ## 技术栈
 
-- Node.js 24、pnpm 11、TypeScript（严格模式）
+- Node.js 24、pnpm 11、TypeScript 6（严格模式）
 - 微信小程序：Taro 4.2.1、React 18、Zustand 5
 - 服务端：NestJS 11、Prisma 7
 - 数据库：PostgreSQL 15+

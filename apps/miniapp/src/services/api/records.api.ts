@@ -1,8 +1,10 @@
 import type {
   BloodPressureListResponse,
+  BloodPressureRecordDTO,
   BloodPressureSummaryDTO,
   CreateBloodPressureRecordRequest,
   CreateBloodPressureRecordResponse,
+  UpdateBloodPressureRecordRequest,
 } from '@bp/contracts'
 
 import { apiClient } from './client'
@@ -24,4 +26,7 @@ export const recordsApi = {
     apiClient.get<BloodPressureSummaryDTO>('/blood-pressure/summary', { profileId, range }),
   create: (data: CreateBloodPressureRecordRequest) =>
     apiClient.post<CreateBloodPressureRecordResponse>('/blood-pressure', data),
+  update: (id: string, data: UpdateBloodPressureRecordRequest) =>
+    apiClient.patch<BloodPressureRecordDTO>(`/blood-pressure/${id}`, data),
+  remove: (id: string) => apiClient.delete<void>(`/blood-pressure/${id}`),
 }
