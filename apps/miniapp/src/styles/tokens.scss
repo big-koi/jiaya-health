@@ -1,17 +1,17 @@
 :root,
 page {
-  --jp-color-brand: #1fa97a;
-  --jp-color-brand-soft: #e8f8f1;
-  --jp-color-brand-deep: #148a62;
-  --jp-color-brand-wash: #f2fbf7;
-  --jp-color-bg: #f4f7f5;
+  --jp-color-brand: #09a86b;
+  --jp-color-brand-soft: #e5f8ef;
+  --jp-color-brand-deep: #078b59;
+  --jp-color-brand-wash: #f0faf5;
+  --jp-color-bg: #f5faf7;
   --jp-color-surface: #ffffff;
-  --jp-color-text: #18302a;
-  --jp-color-text-secondary: #5b716a;
-  --jp-color-text-muted: #8a9a94;
-  --jp-color-border: #e3ece8;
-  --jp-color-normal: #1fa97a;
-  --jp-color-normal-bg: #e8f8f1;
+  --jp-color-text: #12342f;
+  --jp-color-text-secondary: #60746e;
+  --jp-color-text-muted: #8a9b95;
+  --jp-color-border: #dfebe5;
+  --jp-color-normal: #09a86b;
+  --jp-color-normal-bg: #e5f8ef;
   --jp-color-attention: #e39b2b;
   --jp-color-attention-bg: #fff6e8;
   --jp-color-recheck: #e4574d;
@@ -20,7 +20,11 @@ page {
   --jp-radius-md: 20px;
   --jp-radius-lg: 28px;
   --jp-radius-pill: 999px;
-  --jp-shadow-card: 0 8px 24px rgba(24, 48, 42, 0.06);
+  --jp-radius-control: 12px;
+  --jp-radius-card: 16px;
+  --jp-shadow-card: 0 8px 28px rgba(18, 52, 47, 0.055);
+  --jp-duration-fast: 120ms;
+  --jp-touch-min: 88px;
   --jp-space-page: 32px;
   --jp-tab-height: 120px;
   --jp-font-display: 56px;

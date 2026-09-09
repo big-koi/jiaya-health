@@ -1,0 +1,12 @@
+.health-card {
+  border: 1px solid rgba(223, 235, 229, 0.72);
+  border-radius: var(--jp-radius-card);
+  background: var(--jp-color-surface);
+  box-shadow: var(--jp-shadow-card);
+}
+
+.health-card--healthy {
+  border-color: rgba(9, 168, 107, 0.1);
+  background: var(--jp-color-brand-soft);
+  box-shadow: none;
+}

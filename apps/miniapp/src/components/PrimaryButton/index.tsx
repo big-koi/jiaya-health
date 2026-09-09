@@ -8,6 +8,7 @@ type PrimaryButtonProps = {
   disabled?: boolean
   loading?: boolean
   block?: boolean
+  variant?: 'primary' | 'secondary'
 }
 
 export function PrimaryButton({
@@ -16,15 +17,16 @@ export function PrimaryButton({
   disabled = false,
   loading = false,
   block = true,
+  variant = 'primary',
 }: PrimaryButtonProps): JSX.Element {
   return (
     <Button
-      className={`primary-button ${block ? 'is-block' : ''} ${disabled ? 'is-disabled' : ''}`}
-      disabled={disabled}
+      className={`primary-button primary-button--${variant} ${block ? 'is-block' : ''} ${disabled || loading ? 'is-disabled' : ''}`}
+      disabled={disabled || loading}
       loading={loading}
       onClick={onClick}
     >
-      <Text className="primary-button__text">{children}</Text>
+      <Text className="primary-button__text">{loading ? '处理中…' : children}</Text>
     </Button>
   )
 }

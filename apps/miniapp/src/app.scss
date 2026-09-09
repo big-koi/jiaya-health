@@ -18,9 +18,7 @@ button {
 .page {
   min-height: 100vh;
   padding: 24px var(--jp-space-page) calc(var(--jp-tab-height) + 40px);
-  background:
-    radial-gradient(circle at top right, rgba(31, 169, 122, 0.08), transparent 42%),
-    var(--jp-color-bg);
+  background: var(--jp-color-bg);
 }
 
 .page--plain {
@@ -36,7 +34,8 @@ button {
 
 .card {
   background: var(--jp-color-surface);
-  border-radius: var(--jp-radius-lg);
+  border: 1px solid rgba(223, 235, 229, 0.72);
+  border-radius: var(--jp-radius-card);
   box-shadow: var(--jp-shadow-card);
 }
 

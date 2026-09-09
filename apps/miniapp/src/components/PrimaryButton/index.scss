@@ -7,9 +7,10 @@
   height: 96px;
   border: none;
   border-radius: var(--jp-radius-pill);
-  background: linear-gradient(135deg, #24b984 0%, #1fa97a 55%, #148a62 100%);
-  box-shadow: 0 12px 28px rgba(31, 169, 122, 0.28);
+  background: var(--jp-color-brand);
+  box-shadow: 0 10px 24px rgba(9, 168, 107, 0.22);
   line-height: 1;
+  transition: transform var(--jp-duration-fast) ease, background var(--jp-duration-fast) ease;
 }
 
 .primary-button::after {
@@ -22,6 +23,20 @@
 
 .primary-button.is-disabled {
   opacity: 0.5;
+}
+
+.primary-button--secondary {
+  border: 1px solid var(--jp-color-brand);
+  background: #fff;
+  box-shadow: none;
+}
+
+.primary-button--secondary .primary-button__text {
+  color: var(--jp-color-brand-deep);
+}
+
+.primary-button:active {
+  transform: scale(0.985);
 }
 
 .primary-button__text {
