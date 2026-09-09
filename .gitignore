@@ -10,3 +10,9 @@ coverage/
 *.log
 .DS_Store
 Thumbs.db
+
+# 图标源文件体积较大，运行时使用 apps/miniapp/src/assets/icons
+jiaya-icons/png-original/
+
+# 微信开发者工具本地私有配置
+apps/miniapp/project.private.config.json

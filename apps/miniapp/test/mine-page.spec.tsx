@@ -25,7 +25,7 @@ vi.mock('@tarojs/components', async () => {
   const React = await import('react')
   const basic = (tag: 'div' | 'span') =>
     ({ children, ...props }: { children?: ReactNode }) => React.createElement(tag, props, children)
-  return { View: basic('div'), Text: basic('span') }
+  return { View: basic('div'), Text: basic('span'), Image: (props: Record<string, unknown>) => React.createElement('img', props) }
 })
 
 import MinePage from '../src/pages/mine/index'

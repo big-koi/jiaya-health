@@ -2,6 +2,7 @@ import { Button, Checkbox, CheckboxGroup, Image, Label, Text, View } from '@taro
 import Taro, { useReady } from '@tarojs/taro'
 import { useRef, useState } from 'react'
 
+import { ICONS } from '../../assets/icons'
 import { authService } from '../../features/auth/auth.service'
 import { useSessionStore } from '../../store/session.store'
 import './index.scss'
@@ -40,42 +41,45 @@ export default function LoginPage(): JSX.Element {
 
   return (
     <View className="login-page">
-      <View className="login-page__content">
-        <View className="login-page__brand-row">
-          <View className="login-page__brand-mark">
-            <Text className="login-page__brand-mark-text">家</Text>
+      <Image
+        className="login-page__bg"
+        src="/assets/brand/family-hero.jpg"
+        mode="aspectFill"
+      />
+
+      <View className="login-page__overlay">
+        <View className="login-page__top">
+          <View className="login-page__brand-row">
+            <Image className="login-page__brand-logo" src={ICONS.appLogo} mode="aspectFit" />
+            <Text className="login-page__brand">家压</Text>
           </View>
-          <Text className="login-page__brand">家压</Text>
+
+          <View className="login-page__intro">
+            <Text className="login-page__title">用记录，守护家人的健康</Text>
+            <Text className="login-page__desc">让关心，变成一种日常</Text>
+          </View>
         </View>
 
-        <View className="login-page__intro">
-          <Text className="login-page__title">用记录，守护家人的健康</Text>
-          <Text className="login-page__desc">让关心，变成一种日常</Text>
+        <View className="login-page__footer">
+          {errorMessage ? <Text className="login-page__error">{errorMessage}</Text> : null}
+          <Button
+            className="login-page__button"
+            disabled={loading}
+            loading={loading}
+            onClick={() => void handleLogin()}
+          >
+            {loading ? '正在登录' : '微信登录'}
+          </Button>
+          <CheckboxGroup
+            className="login-page__agreement"
+            onChange={(event) => setAgreed(event.detail.value.includes('agreed'))}
+          >
+            <Label className="login-page__agreement-label">
+              <Checkbox className="login-page__checkbox" value="agreed" checked={agreed} color="#0f7653" />
+              <Text className="login-page__agree-text">我已阅读并同意《用户协议》和《隐私政策》</Text>
+            </Label>
+          </CheckboxGroup>
         </View>
-        <View className="login-page__hero-frame">
-          <Image className="login-page__hero" src="/assets/brand/family-hero.jpg" mode="widthFix" />
-        </View>
-      </View>
-
-      <View className="login-page__footer">
-        {errorMessage ? <Text className="login-page__error">{errorMessage}</Text> : null}
-        <Button
-          className="login-page__button"
-          disabled={loading}
-          loading={loading}
-          onClick={() => void handleLogin()}
-        >
-          {loading ? '正在登录' : '微信登录'}
-        </Button>
-        <CheckboxGroup
-          className="login-page__agreement"
-          onChange={(event) => setAgreed(event.detail.value.includes('agreed'))}
-        >
-          <Label className="login-page__agreement-label">
-            <Checkbox className="login-page__checkbox" value="agreed" checked={agreed} color="#0f7653" />
-            <Text className="login-page__agree-text">我已阅读并同意《用户协议》和《隐私政策》</Text>
-          </Label>
-        </CheckboxGroup>
       </View>
     </View>
   )

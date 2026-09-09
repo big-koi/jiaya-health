@@ -2,6 +2,8 @@ import { Text, View } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useEffect, useMemo, useState } from 'react'
 import type { BloodPressureRecordDTO, HealthProfileSummary } from '@bp/contracts'
+import type { IconName } from '../../assets/icons'
+import { AppIcon } from '../../components/AppIcon'
 import { ProfileAvatar } from '../../components/ProfileAvatar'
 import { StatusPill } from '../../components/StatusPill'
 import { formatMeasuredAt } from '../../mocks/demo-data'
@@ -12,12 +14,18 @@ import './index.scss'
 
 const PROFILE_TONES = ['#1fa97a', '#4db6ac', '#3d8bfd', '#e2a03f', '#9b59b6']
 
-const quickActions = [
-  { key: 'record', icon: '＋', label: '记录血压', path: '/pages/record-create/index', tab: true },
-  { key: 'history', icon: '⌁', label: '历史数据', path: '/pages/record-history/index', tab: false },
-  { key: 'tips', icon: '♡', label: '健康解读', path: '/pages/record-result/index', tab: false },
-  { key: 'reminder', icon: '◷', label: '提醒设置', path: '/pages/reminder/index', tab: false },
-] as const
+const quickActions: Array<{
+  key: string
+  icon: IconName
+  label: string
+  path: string
+  tab: boolean
+}> = [
+  { key: 'record', icon: 'addRecord', label: '记录血压', path: '/pages/record-create/index', tab: true },
+  { key: 'history', icon: 'history', label: '历史数据', path: '/pages/record-history/index', tab: false },
+  { key: 'tips', icon: 'healthReport', label: '健康解读', path: '/pages/record-result/index', tab: false },
+  { key: 'reminder', icon: 'reminder', label: '提醒设置', path: '/pages/reminder/index', tab: false },
+]
 
 export default function HomePage(): JSX.Element {
   const [profiles, setProfiles] = useState<HealthProfileSummary[]>([])
@@ -149,7 +157,7 @@ export default function HomePage(): JSX.Element {
           className="home-page__settings"
           onClick={() => void Taro.switchTab({ url: '/pages/mine/index' })}
         >
-          <Text className="home-page__settings-icon">设</Text>
+          <AppIcon name="profile" size={36} />
         </View>
       </View>
 
@@ -211,7 +219,7 @@ export default function HomePage(): JSX.Element {
             onClick={() => openAction(action.path, action.tab)}
           >
             <View className={`home-page__action-icon home-page__action-icon--${action.key}`}>
-              <Text className="home-page__action-mark">{action.icon}</Text>
+              <AppIcon name={action.icon} size={52} />
             </View>
             <Text className="home-page__action-label">{action.label}</Text>
           </View>

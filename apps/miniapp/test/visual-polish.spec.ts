@@ -8,8 +8,9 @@ const source = (path: string): string =>
 describe('第二轮小程序视觉精修', () => {
   it('首页使用语义图标和数据卡片装饰，而不是单字占位图标', () => {
     const page = source('src/pages/home/index.tsx')
-    expect(page).toContain("icon: '＋'")
-    expect(page).toContain("icon: '⌁'")
+    expect(page).toContain("icon: 'addRecord'")
+    expect(page).toContain("icon: 'history'")
+    expect(page).toContain('AppIcon')
     expect(page).toContain('home-page__latest-orbit')
     expect(page).not.toContain('action.label.slice(0, 1)')
   })
@@ -23,7 +24,8 @@ describe('第二轮小程序视觉精修', () => {
   it('个人中心菜单使用独立图标并移除开发版本文案', () => {
     const page = source('src/pages/mine/index.tsx')
     expect(page).toContain('mine-page__item-icon')
-    expect(page).toContain('mine-page__brand-mark')
+    expect(page).toContain('AppIcon')
+    expect(page).toContain('mine-page__brand-logo')
     expect(page).not.toContain('接口联调版')
   })
 
@@ -35,11 +37,15 @@ describe('第二轮小程序视觉精修', () => {
     expect(page).toContain('低压')
   })
 
-  it('登录页具备完整品牌口号与轻量浮层操作区', () => {
+  it('登录页以整图背景叠放登录操作', () => {
     const page = source('src/pages/login/index.tsx')
     const styles = source('src/pages/login/index.scss')
     expect(page).toContain('用记录，守护家人的健康')
-    expect(page).toContain('login-page__hero-frame')
-    expect(styles).toContain('backdrop-filter')
+    expect(page).toContain('login-page__bg')
+    expect(page).toContain('mode="aspectFill"')
+    expect(page).toContain('ICONS.appLogo')
+    expect(page).not.toContain('login-page__hero-frame')
+    expect(styles).toContain('login-page__overlay')
+    expect(styles).not.toContain('backdrop-filter')
   })
 })

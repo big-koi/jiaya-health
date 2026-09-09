@@ -51,19 +51,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
+  padding: 0;
   border-radius: 16px;
-  background: #e9f8f1;
-  color: var(--jp-color-brand-deep);
-  font-size: 28px;
-  font-weight: 600;
+  background: transparent;
 }
 
-.mine-page__item-icon--reminder { background: #fff4df; color: #c8841b; }
-.mine-page__item-icon--history { background: #ebf3ff; color: #397fc7; }
-.mine-page__item-icon--feedback { background: #f1edff; color: #7863c6; }
-.mine-page__item-icon--about { background: #f0f4f2; color: #647872; }
+.mine-page__item-icon--reminder,
+.mine-page__item-icon--history,
+.mine-page__item-icon--feedback,
+.mine-page__item-icon--about {
+  background: transparent;
+}
 
 .mine-page__item-arrow {
   color: var(--jp-color-text-muted);
@@ -78,18 +78,8 @@
   margin-top: 58px;
 }
 
-.mine-page__brand-mark {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  border-radius: 17px;
-  background: var(--jp-color-brand);
-  color: #fff;
-  font-size: 28px;
-  font-weight: 700;
-  box-shadow: 0 8px 20px rgba(9, 168, 107, 0.2);
+.mine-page__brand-logo {
+  margin-bottom: 4px;
 }
 
 .mine-page__logo {

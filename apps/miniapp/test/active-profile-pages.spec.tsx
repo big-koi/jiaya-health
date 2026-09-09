@@ -60,6 +60,7 @@ vi.mock('@tarojs/components', async () => {
         onInput?.({ detail: { value: event.currentTarget.value } }),
     }),
     Picker: ({ children }: BasicProps) => React.createElement('div', {}, children),
+    Image: (props: Record<string, unknown>) => React.createElement('img', props),
   }
 })
 

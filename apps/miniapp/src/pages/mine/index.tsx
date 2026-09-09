@@ -1,16 +1,24 @@
 import { Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import type { IconName } from '../../assets/icons'
+import { AppIcon } from '../../components/AppIcon'
 import { ProfileAvatar } from '../../components/ProfileAvatar'
 import { useSessionStore } from '../../store/session.store'
 import './index.scss'
 
-const menus = [
-  { key: 'family', icon: '⌂', label: '我的家庭', path: '/pages/family/index', tab: true },
-  { key: 'reminder', icon: '◷', label: '提醒设置', path: '/pages/reminder/index', tab: false },
-  { key: 'history', icon: '♡', label: '健康知识', path: '/pages/record-result/index', tab: false },
-  { key: 'feedback', icon: '□', label: '意见反馈', path: '', tab: false },
-  { key: 'about', icon: 'i', label: '关于家压', path: '', tab: false },
-] as const
+const menus: Array<{
+  key: string
+  icon: IconName
+  label: string
+  path: string
+  tab: boolean
+}> = [
+  { key: 'family', icon: 'family', label: '我的家庭', path: '/pages/family/index', tab: true },
+  { key: 'reminder', icon: 'reminder', label: '提醒设置', path: '/pages/reminder/index', tab: false },
+  { key: 'history', icon: 'healthReport', label: '健康知识', path: '/pages/record-result/index', tab: false },
+  { key: 'feedback', icon: 'privacy', label: '意见反馈', path: '', tab: false },
+  { key: 'about', icon: 'appLogo', label: '关于家压', path: '', tab: false },
+]
 
 export default function MinePage(): JSX.Element {
   const currentUser = useSessionStore((state) => state.currentUser)
@@ -63,7 +71,7 @@ export default function MinePage(): JSX.Element {
             onClick={() => openMenu(item.path, item.tab, item.label)}
           >
             <View className={`mine-page__item-icon mine-page__item-icon--${item.key}`}>
-              <Text>{item.icon}</Text>
+              <AppIcon name={item.icon} size={36} />
             </View>
             <Text className="mine-page__item-label">{item.label}</Text>
             <Text className="mine-page__item-arrow">›</Text>
@@ -72,7 +80,7 @@ export default function MinePage(): JSX.Element {
       </View>
 
       <View className="mine-page__footer">
-        <View className="mine-page__brand-mark"><Text>家</Text></View>
+        <AppIcon name="appLogo" size={58} className="mine-page__brand-logo" />
         <Text className="mine-page__logo">家压</Text>
         <Text className="mine-page__version">家庭血压记录与关怀</Text>
         <Text className="mine-page__logout" onClick={handleLogout}>

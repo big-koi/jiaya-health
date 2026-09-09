@@ -140,9 +140,11 @@ pnpm --filter miniapp dev
 当前小程序 UI 已按设计图落地演示页：
 
 - 登录页、首页、记录血压、历史趋势、关注提示、家人、提醒设置、我的
+- 登录页以家庭插画全屏铺底，品牌文案与「微信登录 / 协议」叠在图上，不再使用白底卡片分割
 - 底部 Tab：首页 / 家人 / 记录 / 我的（V1 不含「发现」）
 - 设备同步入口保留为占位，提示 V1 暂不接蓝牙
 - 数据解读页只展示产品关注提示，不展示诊断式医学分级表
+- 统一图标资源位于 `apps/miniapp/src/assets/icons/`，通过 `AppIcon` 组件引用；源包见 `jiaya-icons/`
 
 页面数据来自 `apps/miniapp/src/mocks/demo-data.ts`，后续 Task 10 起再接入真实 API。
 
@@ -215,6 +217,7 @@ git push origin main
 | Task 8 | 7/30 天血压统计与首页聚合接口 | 已完成 |
 | Task 9 | 测量提醒、今日任务及首页接入 | 已完成 |
 | UI 演示 | 小程序主流程页面与设计 Token（演示数据） | 已完成 |
+| 图标资源 | 接入 jiaya-icons 并替换 Tab/首页/我的/登录占位符 | 已完成 |
 | Task 10 及后续 | 登录鉴权、接口联调、关注事件、通知等 | 待开发 |
 
 详细方案见 [V1 设计说明](docs/superpowers/specs/2026-09-07-blood-pressure-family-v1-design.md) 和 [实施计划](docs/superpowers/plans/2026-09-07-blood-pressure-family-v1-plan.md)。
