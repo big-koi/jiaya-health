@@ -20,7 +20,7 @@ export function FamilyMemberCard({
 }: FamilyMemberCardProps): JSX.Element {
   const latest = dashboard?.latestRecord ?? null
   const attentionLevel = dashboard?.attention?.level ?? latest?.attentionLevel ?? 'normal'
-  const measuredToday = dashboard?.todayTasks.some((task) => task.status === 'completed') ?? false
+  const measuredToday = dashboard?.measuredToday ?? false
 
   return (
     <View

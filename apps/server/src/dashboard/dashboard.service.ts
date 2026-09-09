@@ -16,14 +16,15 @@ export class DashboardService {
   ) {}
 
   async get(userId: string, profileId: string): Promise<DashboardResponse> {
-    const [profile, latestRecord, sevenDaySummary, attention, todayTasks] = await Promise.all([
+    const [profile, latestRecord, measuredToday, sevenDaySummary, attention, todayTasks] = await Promise.all([
       this.profilesService.getSummary(userId, profileId),
       this.bloodPressureService.getLatest(userId, profileId),
+      this.bloodPressureService.hasMeasuredToday(userId, profileId),
       this.analysisService.getBloodPressureSummary(userId, profileId, '7d'),
       this.analysisService.getLatestPendingAttention(userId, profileId),
       this.reminderTaskService.getTodayTasks(profileId, new Date()),
     ])
 
-    return { profile, latestRecord, todayTasks, sevenDaySummary, attention }
+    return { profile, measuredToday, latestRecord, todayTasks, sevenDaySummary, attention }
   }
 }

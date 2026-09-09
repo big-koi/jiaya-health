@@ -171,6 +171,7 @@ describe('血压统计与首页聚合 API', () => {
 
     expect(response.body).toMatchObject({
       profile: { id: profileId, name: '妈妈', avatar: null, elderMode: true },
+      measuredToday: false,
       latestRecord: { id: latestRecordId, profileId, systolic: 120, diastolic: 80 },
       todayTasks: [],
       sevenDaySummary: { recordCount: 3, avgSystolic: 133.3, avgDiastolic: 86.7, attentionCount: 1 },
@@ -193,10 +194,34 @@ describe('血压统计与首页聚合 API', () => {
 
     expect(response.body).toMatchObject({
       profile: { id: emptyProfile.body.id, name: '空档案' },
+      measuredToday: false,
       latestRecord: null,
       todayTasks: [],
       sevenDaySummary: { recordCount: 0, avgSystolic: null, avgDiastolic: null, attentionCount: 0 },
       attention: null,
     })
+  })
+
+  it('存在今日未删除记录时明确返回已测', async () => {
+    await prisma.bloodPressureRecord.create({
+      data: {
+        profileId,
+        systolic: 118,
+        diastolic: 76,
+        measuredAt: new Date(),
+        source: 'SELF',
+        recordedByUserId: ownerUserId,
+        attentionLevel: 'NORMAL',
+        ruleVersion: 'test-v1',
+      },
+    })
+
+    const response = await request(app.getHttpServer())
+      .get('/api/v1/dashboard')
+      .query({ profileId })
+      .set('authorization', `Bearer ${ownerToken}`)
+      .expect(200)
+
+    expect(response.body.measuredToday).toBe(true)
   })
 })

@@ -106,6 +106,26 @@ export class BloodPressureService {
     return record ? this.toDto(record) : null
   }
 
+  async hasMeasuredToday(
+    userId: string,
+    profileId: string,
+    now = new Date(),
+  ): Promise<boolean> {
+    await this.assertPermission(userId, profileId, 'canView')
+    const dayMs = 24 * 60 * 60 * 1000
+    const chinaOffsetMs = 8 * 60 * 60 * 1000
+    const startMs =
+      Math.floor((now.getTime() + chinaOffsetMs) / dayMs) * dayMs - chinaOffsetMs
+    const count = await this.prisma.bloodPressureRecord.count({
+      where: {
+        profileId,
+        deletedAt: null,
+        measuredAt: { gte: new Date(startMs), lte: now },
+      },
+    })
+    return count > 0
+  }
+
   async update(userId: string, recordId: string, input: UpdateBloodPressureDto): Promise<BloodPressureRecordDTO> {
     const current = await this.findActive(recordId)
     const familyId = await this.assertPermission(userId, current.profileId, 'canRecord')

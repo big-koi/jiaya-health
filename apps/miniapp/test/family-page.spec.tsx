@@ -54,6 +54,7 @@ vi.mock('@tarojs/components', async () => {
 
 import FamilyPage from '../src/pages/family/index'
 import { ACTIVE_PROFILE_STORAGE_KEY, useActiveProfileStore } from '../src/store/active-profile.store'
+import { useSessionStore } from '../src/store/session.store'
 
 const actEnvironment = globalThis as typeof globalThis & {
   IS_REACT_ACT_ENVIRONMENT: boolean
@@ -78,6 +79,7 @@ const dashboard = {
     createdAt: '2026-09-09T01:00:00.000Z',
     updatedAt: '2026-09-09T01:00:00.000Z',
   },
+  measuredToday: true,
   todayTasks: [{ time: '08:00', status: 'completed' }],
   sevenDaySummary: { recordCount: 1, avgSystolic: 126, avgDiastolic: 78, attentionCount: 1 },
   attention: { level: 'attention', messageCode: 'BP_ATTENTION', requireRecheck: true, ruleVersion: 'v1' },
@@ -92,6 +94,7 @@ describe('FamilyPage', () => {
     taro.didShowCallbacks.length = 0
     taro.storage.clear()
     useActiveProfileStore.getState().clearSelection()
+    useSessionStore.getState().clearSession()
     container = document.createElement('div')
     document.body.append(container)
     root = createRoot(container)
@@ -131,6 +134,7 @@ describe('FamilyPage', () => {
   })
 
   it('未绑定账号成员照常展示，并复用 Dashboard 摘要展示长辈模式和关注状态', async () => {
+    useSessionStore.getState().setSession('token-1', { userId: 'user-1', nickname: '小明', avatar: null })
     api.families.list.mockResolvedValue([{ id: 'family-1', name: '温暖小家', avatar: null, ownerUserId: 'user-1', memberCount: 1 }])
     api.profiles.list.mockResolvedValue([{ id: 'profile-1', familyId: 'family-1', name: '王阿姨', avatar: null, elderMode: true }])
     api.dashboard.get.mockResolvedValue(dashboard)
@@ -145,6 +149,43 @@ describe('FamilyPage', () => {
     expect(container.textContent).toContain('建议关注')
     expect(container.textContent).not.toContain('编辑成员')
     expect(api.dashboard.get).toHaveBeenCalledWith('profile-1')
+  })
+
+  it('今日提醒已完成但服务端 measuredToday 为 false 时展示今日待测', async () => {
+    api.families.list.mockResolvedValue([{ id: 'family-1', name: '温暖小家', avatar: null, ownerUserId: 'user-1', memberCount: 1 }])
+    api.profiles.list.mockResolvedValue([{ id: 'profile-1', familyId: 'family-1', name: '王阿姨', avatar: null, elderMode: false }])
+    api.dashboard.get.mockResolvedValue({ ...dashboard, measuredToday: false })
+    api.permissions.list.mockResolvedValue([])
+
+    await renderPage()
+
+    expect(container.textContent).toContain('今日待测')
+    expect(container.textContent).not.toContain('今日已测')
+  })
+
+  it('没有家庭成员关系时仍在共享分组展示显式授权档案', async () => {
+    api.families.list.mockResolvedValue([])
+    api.profiles.list.mockResolvedValue([{ id: 'shared-profile', familyId: 'hidden-family', name: '共享长辈', avatar: null, elderMode: true }])
+    api.dashboard.get.mockResolvedValue({ ...dashboard, profile: { ...dashboard.profile, id: 'shared-profile', familyId: 'hidden-family', name: '共享长辈' } })
+    api.permissions.list.mockRejectedValue(new Error('无管理权限'))
+
+    await renderPage()
+
+    expect(container.textContent).toContain('共享给我的成员')
+    expect(container.textContent).toContain('共享长辈')
+    expect(container.textContent).not.toContain('hidden-family')
+  })
+
+  it('当前用户有 canManageProfile 时展示编辑入口', async () => {
+    useSessionStore.getState().setSession('token-1', { userId: 'user-1', nickname: '小明', avatar: null })
+    api.families.list.mockResolvedValue([{ id: 'family-1', name: '温暖小家', avatar: null, ownerUserId: 'user-1', memberCount: 1 }])
+    api.profiles.list.mockResolvedValue([{ id: 'profile-1', familyId: 'family-1', name: '王阿姨', avatar: null, elderMode: false }])
+    api.dashboard.get.mockResolvedValue(dashboard)
+    api.permissions.list.mockResolvedValue([{ profileId: 'profile-1', userId: 'user-1', canView: true, canRecord: true, canManageReminder: true, canManageProfile: true, canReceiveAttention: true }])
+
+    await renderPage()
+
+    expect(container.textContent).toContain('编辑成员')
   })
 
   it('切换成员时成对持久化 familyId 和 profileId', async () => {

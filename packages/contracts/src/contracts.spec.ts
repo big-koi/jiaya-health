@@ -14,6 +14,7 @@ describe('shared API contracts', () => {
   it('models the dashboard payload consumed by both applications', () => {
     const dashboard = {
       profile: { id: 'p1', familyId: 'f1', name: '爸爸', avatar: null, elderMode: true },
+      measuredToday: true,
       latestRecord: null,
       todayTasks: [{ time: '08:00', status: 'completed' }],
       sevenDaySummary: {
@@ -27,6 +28,7 @@ describe('shared API contracts', () => {
 
     expect(dashboard.profile.elderMode).toBe(true)
     expect(dashboard.profile.familyId).toBe('f1')
+    expect(dashboard.measuredToday).toBe(true)
     expect(dashboard.todayTasks[0]?.status).toBe('completed')
   })
 

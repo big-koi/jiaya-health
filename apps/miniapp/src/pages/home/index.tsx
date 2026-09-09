@@ -1,14 +1,17 @@
 import { Text, View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
-import { useMemo, useState } from 'react'
+import Taro, { useDidShow } from '@tarojs/taro'
+import { useEffect, useMemo, useState } from 'react'
+import type { BloodPressureRecordDTO, HealthProfileSummary } from '@bp/contracts'
 import { ProfileAvatar } from '../../components/ProfileAvatar'
 import { StatusPill } from '../../components/StatusPill'
-import {
-  demoMembers,
-  demoRecords,
-  formatMeasuredAt,
-} from '../../mocks/demo-data'
+import { formatMeasuredAt } from '../../mocks/demo-data'
+import { dashboardApi } from '../../services/api/dashboard.api'
+import { profilesApi } from '../../services/api/profiles.api'
+import { recordsApi } from '../../services/api/records.api'
+import { useActiveProfileStore } from '../../store/active-profile.store'
 import './index.scss'
+
+const PROFILE_TONES = ['#1fa97a', '#4db6ac', '#3d8bfd', '#e2a03f', '#9b59b6']
 
 const quickActions = [
   { key: 'record', label: '记录血压', path: '/pages/record-create/index', tab: true },
@@ -18,20 +21,60 @@ const quickActions = [
 ] as const
 
 export default function HomePage(): JSX.Element {
-  const [activeId, setActiveId] = useState(demoMembers[0]?.id ?? '')
-  const activeMember = useMemo(
-    () => demoMembers.find((member) => member.id === activeId) ?? demoMembers[0],
-    [activeId],
-  )
-  const latest = demoRecords[0]
+  const [profiles, setProfiles] = useState<HealthProfileSummary[]>([])
+  const [latest, setLatest] = useState<BloodPressureRecordDTO | null>(null)
+  const [recentRecords, setRecentRecords] = useState<BloodPressureRecordDTO[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const activeProfileId = useActiveProfileStore((state) => state.activeProfileId)
 
-  if (!activeMember || !latest) {
-    return (
-      <View className="page home-page">
-        <Text className="home-page__greeting">暂无演示数据</Text>
-      </View>
-    )
+  const loadDashboard = async (profileId: string): Promise<void> => {
+    try {
+      const [dashboard, records] = await Promise.all([
+        dashboardApi.get(profileId),
+        recordsApi.list({ profileId, limit: 5 }),
+      ])
+      setLatest(dashboard.latestRecord)
+      setRecentRecords(records.items)
+      setError(null)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
+    }
   }
+
+  useDidShow(() => {
+    void (async () => {
+      setLoading(true)
+      try {
+        const profileList = await profilesApi.list()
+        setProfiles(profileList)
+      } catch (cause) {
+        setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
+      } finally {
+        setLoading(false)
+      }
+    })()
+  })
+
+  useEffect(() => {
+    if (!activeProfileId || !profiles.some((profile) => profile.id === activeProfileId)) {
+      setLatest(null)
+      setRecentRecords([])
+      return
+    }
+    void loadDashboard(activeProfileId)
+  }, [activeProfileId, profiles])
+
+  const switchProfile = (profileId: string): void => {
+    if (profileId === activeProfileId) return
+    const target = profiles.find((item) => item.id === profileId)
+    if (target) useActiveProfileStore.getState().selectProfile(target.familyId, target.id)
+  }
+
+  const activeMember = useMemo(
+    () => profiles.find((item) => item.id === activeProfileId) ?? null,
+    [profiles, activeProfileId],
+  )
 
   const openAction = (path: string, tab: boolean): void => {
     if (tab) {
@@ -39,6 +82,57 @@ export default function HomePage(): JSX.Element {
       return
     }
     void Taro.navigateTo({ url: path })
+  }
+
+  if (loading) {
+    return (
+      <View className="page home-page">
+        <Text className="home-page__greeting">加载中…</Text>
+      </View>
+    )
+  }
+
+  if (profiles.length === 0) {
+    return (
+      <View className="page home-page">
+        <View className="home-page__header">
+          <Text className="home-page__brand">家压</Text>
+        </View>
+        <View className="card home-page__latest">
+          <Text className="home-page__greeting">还没有家庭成员档案</Text>
+          <Text className="home-page__greeting">
+            登录后可先创建家庭，再从「记录血压」添加测量对象。
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
+  if (!activeMember) {
+    return (
+      <View className="page home-page">
+        <View className="home-page__header">
+          <View>
+            <Text className="home-page__brand">家压</Text>
+            <Text className="home-page__greeting">请先选择一位成员</Text>
+          </View>
+        </View>
+        <View className="home-page__members">
+          {profiles.map((member, index) => (
+            <View key={member.id} onClick={() => switchProfile(member.id)}>
+              <ProfileAvatar
+                name={member.name}
+                initial={member.name.slice(0, 1) || '家'}
+                tone={PROFILE_TONES[index % PROFILE_TONES.length] ?? '#1fa97a'}
+              />
+            </View>
+          ))}
+        </View>
+        <View className="card home-page__latest">
+          <Text className="home-page__greeting">选择后会加载对应成员的首页摘要和近期记录。</Text>
+        </View>
+      </View>
+    )
   }
 
   return (
@@ -57,13 +151,13 @@ export default function HomePage(): JSX.Element {
       </View>
 
       <View className="home-page__members">
-        {demoMembers.map((member) => (
-          <View key={member.id} onClick={() => setActiveId(member.id)}>
+        {profiles.map((member, index) => (
+          <View key={member.id} onClick={() => switchProfile(member.id)}>
             <ProfileAvatar
               name={member.name}
-              initial={member.initial}
-              tone={member.tone}
-              active={member.id === activeId}
+              initial={member.name.slice(0, 1) || '家'}
+              tone={PROFILE_TONES[index % PROFILE_TONES.length] ?? '#1fa97a'}
+              active={member.id === activeProfileId}
             />
           </View>
         ))}
@@ -78,24 +172,32 @@ export default function HomePage(): JSX.Element {
         </View>
       </View>
 
-      <View className="card home-page__latest">
-        <View className="home-page__latest-top">
-          <Text className="home-page__latest-name">{activeMember.name}的最近读数</Text>
-          <StatusPill level={latest.attentionLevel} />
+      {latest ? (
+        <View className="card home-page__latest">
+          <View className="home-page__latest-top">
+            <Text className="home-page__latest-name">{activeMember?.name ?? '家人'}的最近读数</Text>
+            <StatusPill level={latest.attentionLevel} />
+          </View>
+          <View className="home-page__latest-values">
+            <Text className="home-page__bp">
+              {latest.systolic}
+              <Text className="home-page__bp-sep">/</Text>
+              {latest.diastolic}
+            </Text>
+            <Text className="home-page__unit">mmHg</Text>
+          </View>
+          <View className="home-page__latest-meta">
+            <Text className="home-page__meta-item">脉搏 {latest.pulse ?? '--'} bpm</Text>
+            <Text className="home-page__meta-item">{formatMeasuredAt(latest.measuredAt)}</Text>
+          </View>
         </View>
-        <View className="home-page__latest-values">
-          <Text className="home-page__bp">
-            {latest.systolic}
-            <Text className="home-page__bp-sep">/</Text>
-            {latest.diastolic}
-          </Text>
-          <Text className="home-page__unit">mmHg</Text>
+      ) : (
+        <View className="card home-page__latest">
+          <Text className="home-page__greeting">暂无读数，快去记录第一条吧</Text>
         </View>
-        <View className="home-page__latest-meta">
-          <Text className="home-page__meta-item">脉搏 {latest.pulse ?? '--'} bpm</Text>
-          <Text className="home-page__meta-item">{formatMeasuredAt(latest.measuredAt)}</Text>
-        </View>
-      </View>
+      )}
+
+      {error ? <Text className="home-page__greeting">{error}</Text> : null}
 
       <View className="home-page__actions">
         {quickActions.map((action) => (
@@ -115,17 +217,21 @@ export default function HomePage(): JSX.Element {
       <View className="home-page__section">
         <Text className="section-title">近期记录</Text>
         <View className="card home-page__list">
-          {demoRecords.map((record) => (
-            <View key={record.id} className="home-page__row">
-              <View>
-                <Text className="home-page__row-time">{formatMeasuredAt(record.measuredAt)}</Text>
-                <Text className="home-page__row-bp">
-                  {record.systolic}/{record.diastolic} mmHg
-                </Text>
+          {recentRecords.length > 0 ? (
+            recentRecords.map((record) => (
+              <View key={record.id} className="home-page__row">
+                <View>
+                  <Text className="home-page__row-time">{formatMeasuredAt(record.measuredAt)}</Text>
+                  <Text className="home-page__row-bp">
+                    {record.systolic}/{record.diastolic} mmHg
+                  </Text>
+                </View>
+                <StatusPill level={record.attentionLevel} />
               </View>
-              <StatusPill level={record.attentionLevel} />
-            </View>
-          ))}
+            ))
+          ) : (
+            <Text className="home-page__greeting">还没有血压记录</Text>
+          )}
         </View>
       </View>
     </View>

@@ -50,6 +50,10 @@ export default function FamilyPage(): JSX.Element {
   const visibleMembers = members.filter(
     (member) => member.profile.familyId === selectedFamilyId,
   )
+  const familyIds = new Set(families.map((family) => family.id))
+  const sharedMembers = members.filter(
+    (member) => !familyIds.has(member.profile.familyId),
+  )
 
   const selectMember = (member: FamilyMemberOverview): void => {
     useActiveProfileStore
@@ -142,6 +146,26 @@ export default function FamilyPage(): JSX.Element {
 
           <PrimaryButton onClick={openAddMember}>添加成员</PrimaryButton>
         </>
+      ) : null}
+      {!loading && !error && sharedMembers.length > 0 ? (
+        <View className="family-page__shared">
+          <View className="family-page__section-heading">
+            <Text className="section-title">共享给我的成员</Text>
+          </View>
+          <View className="card family-page__list">
+            {sharedMembers.map((member, index) => (
+              <FamilyMemberCard
+                key={member.profile.id}
+                {...member}
+                tone={PROFILE_TONES[(visibleMembers.length + index) % PROFILE_TONES.length] ?? '#1fa97a'}
+                onSelect={() => selectMember(member)}
+                onEdit={() => void Taro.navigateTo({
+                  url: `/pages/family-profile/index?profileId=${member.profile.id}&edit=1`,
+                })}
+              />
+            ))}
+          </View>
+        </View>
       ) : null}
     </View>
   )

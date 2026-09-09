@@ -8,6 +8,7 @@ import type { MeasurementTaskDTO } from './reminder'
 
 export type DashboardResponse = {
   profile: HealthProfileSummary
+  measuredToday: boolean
   latestRecord: BloodPressureRecordDTO | null
   todayTasks: MeasurementTaskDTO[]
   sevenDaySummary: BloodPressureSummaryDTO
