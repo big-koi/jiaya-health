@@ -28,20 +28,6 @@ export default function HomePage(): JSX.Element {
   const [error, setError] = useState<string | null>(null)
   const activeProfileId = useActiveProfileStore((state) => state.activeProfileId)
 
-  const loadDashboard = async (profileId: string): Promise<void> => {
-    try {
-      const [dashboard, records] = await Promise.all([
-        dashboardApi.get(profileId),
-        recordsApi.list({ profileId, limit: 5 }),
-      ])
-      setLatest(dashboard.latestRecord)
-      setRecentRecords(records.items)
-      setError(null)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
-    }
-  }
-
   useDidShow(() => {
     void (async () => {
       setLoading(true)
@@ -62,7 +48,24 @@ export default function HomePage(): JSX.Element {
       setRecentRecords([])
       return
     }
-    void loadDashboard(activeProfileId)
+    let cancelled = false
+    void (async () => {
+      try {
+        const [dashboard, records] = await Promise.all([
+          dashboardApi.get(activeProfileId),
+          recordsApi.list({ profileId: activeProfileId, limit: 5 }),
+        ])
+        if (cancelled) return
+        setLatest(dashboard.latestRecord)
+        setRecentRecords(records.items)
+        setError(null)
+      } catch (cause) {
+        if (!cancelled) {
+          setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
+        }
+      }
+    })()
+    return () => { cancelled = true }
   }, [activeProfileId, profiles])
 
   const switchProfile = (profileId: string): void => {

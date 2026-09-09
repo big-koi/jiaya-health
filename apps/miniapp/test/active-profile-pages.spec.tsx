@@ -82,6 +82,32 @@ const dashboard = (profileId: string) => ({
   attention: null,
 })
 
+const record = (profileId: string, systolic: number, diastolic: number) => ({
+  id: `record-${profileId}-${systolic}`,
+  profileId,
+  systolic,
+  diastolic,
+  pulse: 70,
+  measuredAt: '2026-09-09T01:00:00.000Z',
+  source: 'family' as const,
+  recordedByUserId: 'user-1',
+  measurementContext: null,
+  note: null,
+  attentionLevel: 'normal' as const,
+  ruleVersion: 'v1',
+  createdAt: '2026-09-09T01:00:00.000Z',
+  updatedAt: '2026-09-09T01:00:00.000Z',
+})
+
+function deferred<T>(): {
+  promise: Promise<T>
+  resolve: (value: T) => void
+} {
+  let resolve!: (value: T) => void
+  const promise = new Promise<T>((done) => { resolve = done })
+  return { promise, resolve }
+}
+
 const actEnvironment = globalThis as typeof globalThis & { IS_REACT_ACT_ENVIRONMENT: boolean }
 actEnvironment.IS_REACT_ACT_ENVIRONMENT = true
 
@@ -172,7 +198,12 @@ describe('active profile data pages', () => {
 
     await selectB()
 
-    expect(api.records.list).toHaveBeenCalledWith({ profileId: 'profile-b', limit: 50 })
+    expect(api.records.list).toHaveBeenCalledWith(expect.objectContaining({
+      profileId: 'profile-b',
+      from: expect.any(String),
+      to: expect.any(String),
+      limit: 50,
+    }))
     expect(api.records.summary).toHaveBeenCalledWith('profile-b', '7d')
   })
 
@@ -182,5 +213,139 @@ describe('active profile data pages', () => {
     expect(container.textContent).toContain('请先选择一位成员')
     expect(api.dashboard.get).not.toHaveBeenCalled()
     expect(api.records.list).not.toHaveBeenCalled()
+  })
+
+  it('首页忽略成员切换前较慢返回的请求结果', async () => {
+    const slowA = deferred<ReturnType<typeof dashboard>>()
+    api.dashboard.get.mockImplementation((profileId: string) => {
+      if (profileId === 'profile-a') return slowA.promise
+      return Promise.resolve({
+        ...dashboard(profileId),
+        latestRecord: record(profileId, 132, 84),
+      })
+    })
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    await renderPage(HomePage)
+
+    await selectB()
+    await act(async () => { await Promise.resolve() })
+    expect(container.textContent).toContain('132/84')
+
+    await act(async () => {
+      slowA.resolve({
+        ...dashboard('profile-a'),
+        latestRecord: record('profile-a', 118, 76),
+      })
+      await slowA.promise
+      await Promise.resolve()
+    })
+
+    expect(container.textContent).toContain('132/84')
+    expect(container.textContent).not.toContain('118/76')
+  })
+
+  it('历史页忽略成员切换前较慢返回的请求结果', async () => {
+    const slowARecords = deferred<{ items: ReturnType<typeof record>[]; nextCursor: null }>()
+    const slowASummary = deferred<typeof emptySummary>()
+    api.records.list.mockImplementation(({ profileId }: { profileId: string }) =>
+      profileId === 'profile-a'
+        ? slowARecords.promise
+        : Promise.resolve({ items: [record(profileId, 136, 86)], nextCursor: null }),
+    )
+    api.records.summary.mockImplementation((profileId: string) =>
+      profileId === 'profile-a'
+        ? slowASummary.promise
+        : Promise.resolve({ recordCount: 1, avgSystolic: 136, avgDiastolic: 86, attentionCount: 0 }),
+    )
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    await renderPage(RecordHistoryPage)
+
+    await selectB()
+    await act(async () => { await Promise.resolve() })
+    expect(container.textContent).toContain('136/86')
+
+    await act(async () => {
+      slowARecords.resolve({ items: [record('profile-a', 116, 74)], nextCursor: null })
+      slowASummary.resolve({ recordCount: 1, avgSystolic: 116, avgDiastolic: 74, attentionCount: 0 })
+      await Promise.all([slowARecords.promise, slowASummary.promise])
+      await Promise.resolve()
+    })
+
+    expect(container.textContent).toContain('136/86')
+    expect(container.textContent).not.toContain('116/74')
+  })
+
+  it('历史页为 7d 与 30d 列表请求传入对应时间范围', async () => {
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    const before = Date.now()
+    await renderPage(RecordHistoryPage)
+    const after = Date.now()
+
+    const firstQuery = api.records.list.mock.calls[0]?.[0]
+    const firstTo = Date.parse(firstQuery?.to ?? '')
+    const firstFrom = Date.parse(firstQuery?.from ?? '')
+    expect(firstTo).toBeGreaterThanOrEqual(before)
+    expect(firstTo).toBeLessThanOrEqual(after)
+    expect(firstTo - firstFrom).toBe(7 * 24 * 60 * 60 * 1000)
+
+    const rangeButtons = container.querySelectorAll<HTMLElement>('.history-page__range')
+    await act(async () => {
+      rangeButtons[1]?.click()
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+
+    const secondQuery = api.records.list.mock.calls.at(-1)?.[0]
+    expect(Date.parse(secondQuery.to) - Date.parse(secondQuery.from)).toBe(30 * 24 * 60 * 60 * 1000)
+  })
+
+  it('历史页平均值使用服务端 summary 而不是列表记录重算', async () => {
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    api.records.list.mockResolvedValue({
+      items: [record('profile-a', 100, 60), record('profile-a', 200, 100)],
+      nextCursor: null,
+    })
+    api.records.summary.mockResolvedValue({
+      recordCount: 2,
+      avgSystolic: 125.5,
+      avgDiastolic: 81.5,
+      attentionCount: 0,
+    })
+
+    await renderPage(RecordHistoryPage)
+
+    const average = container.querySelector<HTMLElement>('.history-page__stat-value')
+    expect(average?.textContent).toBe('125.5/81.5')
+  })
+
+  it('历史页忽略切换范围前较慢返回的请求结果', async () => {
+    const slowSevenRecords = deferred<{ items: ReturnType<typeof record>[]; nextCursor: null }>()
+    const slowSevenSummary = deferred<typeof emptySummary>()
+    api.records.list
+      .mockImplementationOnce(() => slowSevenRecords.promise)
+      .mockResolvedValueOnce({ items: [record('profile-a', 139, 89)], nextCursor: null })
+    api.records.summary
+      .mockImplementationOnce(() => slowSevenSummary.promise)
+      .mockResolvedValueOnce({ recordCount: 1, avgSystolic: 139, avgDiastolic: 89, attentionCount: 0 })
+    useActiveProfileStore.getState().selectProfile('family-a', 'profile-a')
+    await renderPage(RecordHistoryPage)
+
+    const rangeButtons = container.querySelectorAll<HTMLElement>('.history-page__range')
+    await act(async () => {
+      rangeButtons[1]?.click()
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+    expect(container.textContent).toContain('139/89')
+
+    await act(async () => {
+      slowSevenRecords.resolve({ items: [record('profile-a', 111, 71)], nextCursor: null })
+      slowSevenSummary.resolve({ recordCount: 1, avgSystolic: 111, avgDiastolic: 71, attentionCount: 0 })
+      await Promise.all([slowSevenRecords.promise, slowSevenSummary.promise])
+      await Promise.resolve()
+    })
+
+    expect(container.textContent).toContain('139/89')
+    expect(container.textContent).not.toContain('111/71')
   })
 })

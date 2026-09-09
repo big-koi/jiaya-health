@@ -209,6 +209,28 @@ describe('FamilyPage', () => {
     })
   })
 
+  it('返回家庭页时保留已选择的共享成员与其 familyId', async () => {
+    useActiveProfileStore.getState().selectProfile('hidden-family', 'shared-profile')
+    api.families.list.mockResolvedValue([
+      { id: 'family-1', name: '我的家庭', avatar: null, ownerUserId: 'user-1', memberCount: 1 },
+    ])
+    api.profiles.list.mockResolvedValue([
+      { id: 'shared-profile', familyId: 'hidden-family', name: '共享成员', avatar: null, elderMode: false },
+    ])
+    api.dashboard.get.mockResolvedValue({
+      ...dashboard,
+      profile: { ...dashboard.profile, id: 'shared-profile', familyId: 'hidden-family', name: '共享成员' },
+    })
+    api.permissions.list.mockResolvedValue([])
+
+    await renderPage()
+
+    expect(taro.storage.get(ACTIVE_PROFILE_STORAGE_KEY)).toEqual({
+      activeFamilyId: 'hidden-family',
+      activeProfileId: 'shared-profile',
+    })
+  })
+
   it('单个 Dashboard 摘要失败时保留成员并明确展示降级状态', async () => {
     api.families.list.mockResolvedValue([{ id: 'family-1', name: '温暖小家', avatar: null, ownerUserId: 'user-1', memberCount: 1 }])
     api.profiles.list.mockResolvedValue([{ id: 'profile-1', familyId: 'family-1', name: '王阿姨', avatar: null, elderMode: false }])

@@ -23,6 +23,7 @@ export default function RecordHistoryPage(): JSX.Element {
   const activeProfileId = useActiveProfileStore((state) => state.activeProfileId)
 
   useEffect(() => {
+    let cancelled = false
     void (async () => {
       setLoading(true)
       setError(null)
@@ -33,18 +34,30 @@ export default function RecordHistoryPage(): JSX.Element {
         return
       }
       try {
+        const days = range === '7d' ? 7 : 30
+        const to = new Date()
+        const from = new Date(to.getTime() - days * 24 * 60 * 60 * 1000)
         const [recordData, summaryData] = await Promise.all([
-          recordsApi.list({ profileId: activeProfileId, limit: 50 }),
+          recordsApi.list({
+            profileId: activeProfileId,
+            from: from.toISOString(),
+            to: to.toISOString(),
+            limit: 50,
+          }),
           recordsApi.summary(activeProfileId, range),
         ])
+        if (cancelled) return
         setRecords(recordData.items)
         setSummary(summaryData)
       } catch (cause) {
-        setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
+        if (!cancelled) {
+          setError(cause instanceof Error ? cause.message : '加载失败，请稍后重试')
+        }
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     })()
+    return () => { cancelled = true }
   }, [activeProfileId, range])
 
   const switchRange = (targetRange: BloodPressureSummaryRange): void => {
@@ -55,14 +68,16 @@ export default function RecordHistoryPage(): JSX.Element {
     const systolicValues = records.map((item) => item.systolic)
     const diastolicValues = records.map((item) => item.diastolic)
     if (systolicValues.length === 0) return null
-    const avg = (values: number[]): number =>
-      Math.round(values.reduce((sum, value) => sum + value, 0) / values.length)
     return {
-      avg: `${avg(systolicValues)}/${avg(diastolicValues)}`,
+      avg:
+        summary?.avgSystolic === null || summary?.avgSystolic === undefined ||
+        summary.avgDiastolic === null || summary.avgDiastolic === undefined
+          ? '--/--'
+          : `${summary.avgSystolic}/${summary.avgDiastolic}`,
       max: `${Math.max(...systolicValues)}/${Math.max(...diastolicValues)}`,
       min: `${Math.min(...systolicValues)}/${Math.min(...diastolicValues)}`,
     }
-  }, [records])
+  }, [records, summary])
 
   const chartPoints = useMemo(() => {
     if (records.length === 0) return []

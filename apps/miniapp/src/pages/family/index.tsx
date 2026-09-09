@@ -28,7 +28,12 @@ export default function FamilyPage(): JSX.Element {
       setFamilies(overview.families)
       setMembers(overview.members)
       const storedFamilyId = useActiveProfileStore.getState().activeFamilyId
-      if (!storedFamilyId || !overview.families.some((family) => family.id === storedFamilyId)) {
+      const storedFamilyIsVisible = Boolean(
+        storedFamilyId &&
+          (overview.families.some((family) => family.id === storedFamilyId) ||
+            overview.members.some((member) => member.profile.familyId === storedFamilyId)),
+      )
+      if (!storedFamilyIsVisible) {
         useActiveProfileStore.getState().selectFamily(overview.families[0]?.id ?? null)
       }
     } catch (cause) {
